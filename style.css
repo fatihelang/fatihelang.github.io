@@ -1,0 +1,142 @@
+@font-face {
+    font-family: 'dense';
+    src: url(dense/Dense-Regular.otf);
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'dense';
+    box-sizing: border-box;
+}
+
+.home{
+    height: 100vh;
+    width: 100%;
+    background-color: #272727 ;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.logo{
+    color: #EFFFFB;
+    font-size: 6.5vw;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-top: 2vw;
+    padding-left: 2vw;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span{
+    color: #50D890;
+}
+
+.logo:hover{
+    color: #50D890;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span:hover{
+    color: #EFFFFB;
+    width: 50px;
+    height: 50px;
+}
+
+
+.isi{
+    display: inline-block;
+}
+
+.call::after,
+.call::before {
+    content: "Hello, i am";
+    position: absolute;
+    top: 10vw;
+    left: 18vw;
+    width: 100%;
+    color: #EFFFFB;
+    font-size: 10vw;
+    width: 35vw;
+    height: auto;
+}
+
+.call:hover:after{
+    color: transparent;
+}
+
+.call::before{
+    content: "Contact";
+    color: transparent;
+    left: 17.5vw;
+}
+
+.call:hover::before{
+    color: #50D890;
+}
+
+.name::after,
+.name::before {
+    content: "Fatih Ali Elang";
+    position: absolute;
+    top: 18vw;
+    left: 15.2vw;
+    text-align: center;
+    width: 100%;
+    color: #50D890;
+    font-size: 15vw;
+    width: 55vw;
+    height: auto;
+}
+
+.name:hover:after{
+    color: transparent;
+}
+
+.name::before{
+    content: "About";
+    color: transparent;
+     left: 1vw;
+}
+
+.name:hover::before{
+    color: #EFFFFB;
+}
+
+.study::after,
+.study::before {
+    content: "A  student";
+    position: absolute;
+    top: 31vw;
+    left: 13.5vw;
+    text-align: center;
+    width: 100%;
+    color: #EFFFFB;
+    font-size: 10vw;
+    width: 31vw;
+    height: auto;
+}
+
+.study:hover:after{
+    color: transparent;
+}
+
+.study::before{
+    content: "Dream";
+    color: transparent;
+    left: 10vw;
+}
+
+.study:hover::before{
+    color: #50D890;
+}
+
+
+@media(max-width: 767px){
+    .isi{
+        width: 100%;
+    }
+}

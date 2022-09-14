@@ -1,0 +1,154 @@
+@font-face {
+    font-family: 'dense';
+    src: url(dense/Dense-Regular.otf);
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'dense';
+    box-sizing: border-box;
+}
+
+.home{
+    height: 100vh;
+    width: 100%;
+    background-color: #272727 ;
+    background-size: cover;
+    background-position: center;
+}
+
+
+.logo{
+    color: #EFFFFB;
+    font-size: 6.5vw;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-top: 2vw;
+    padding-left: 2vw;
+    position: absolute;
+   text-decoration: none;
+}
+
+.logo span{
+    color: #50D890;
+}
+
+.logo:hover{
+    color: #50D890;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span:hover{
+    color: #EFFFFB;
+    width: 50px;
+    height: 50px;
+}
+
+.dream{
+    min-height: 100vh;
+    width: 100%;
+    float: left;
+    background-color: #272727;
+}
+.isi{
+    max-width: 1170px;
+    margin: auto;
+}
+
+.dream .heading{
+    margin-bottom: 60px;
+    width: 100%;
+    float: left;
+}
+
+.dream .heading h1{
+    padding-top: 10%;
+    font-size: 5em;
+    color: #EFFFFB;
+    letter-spacing: 2px;
+}
+
+.dream .isi{
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+.dream .isi .box{
+    width: 33.33%;
+    float: left;
+    padding: 15px;
+}
+
+.dream .isi .box .dalam{
+    padding: 30px;
+    position: relative;
+    margin: auto;
+}
+
+.dream .isi .box .dalam::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    box-sizing: border-box;
+    border-bottom: 3px solid transparent;
+    border-left: 3px solid transparent;
+    transition: all .8s ease;
+}
+
+.dream .isi .box .dalam::after{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    box-sizing: border-box;
+    border-top: 3px solid transparent;
+    border-right: 3px solid transparent;
+    transition: all .8s ease;
+}
+
+.dream .isi .box:hover .dalam::after,
+.dream .isi .box:hover .dalam::before{
+    border-color: #50D890;
+    width: 100%;
+    height: 100%;
+}
+
+.dream .isi .box .dalam .icon{
+    font-size: 50px;
+    color: #EFFFFB;
+    transition: all .8s ease;
+}
+
+.dream .isi .box:hover .dalam .icon{
+    color: #50D890;
+}
+.dream .isi .box .dalam h3{
+    font-size: 30px;
+    font-weight: normal;
+    color: #50D890;
+    margin: 20px 0;
+
+}
+
+.dream .isi .box .dalam p{
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    color: #EFFFFB;
+    text-align: center;
+    line-height: 24px;
+}
+
+
+@media(max-width: 767px){
+    .dream .isi .box{
+        width: 100%;
+    }
+}

@@ -1,0 +1,106 @@
+@font-face {
+    font-family: 'dense';
+    src: url(dense/Dense-Regular.otf);
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'dense';
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #272727;
+}
+
+.home{
+    height: 100vh;
+    width: 100%;
+    background-color: #272727 ;
+    background-size: cover;
+    background-position: center;
+}
+
+.logo{
+    color: #EFFFFB;
+    font-size: 6.5vw;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-top: 2vw;
+    padding-left: 2vw;
+    position: absolute;
+   text-decoration: none;
+}
+
+.logo span{
+    color: #50D890;
+}
+
+.logo:hover{
+    color: #50D890;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span:hover{
+    color: #EFFFFB;
+    width: 50px;
+    height: 50px;
+}
+
+ul{
+    margin: auto ;
+    width: 50%;
+}
+
+ul li{
+    list-style: none;
+    text-align: center;
+    width: 33.330%;
+    float: left;
+    padding-top: 15%;
+}
+
+ul li a{
+    text-decoration: none;
+}
+
+ul li a .fa{
+    color: #50D890;
+    font-size: 6em;
+    transition: .5s;
+}
+
+ul li a .text{
+    color: #EFFFFB;
+    font-size: 3em;
+    opacity: 0;
+    transition: .5s;
+    transform: translateY(2vw);
+}
+
+ul li:hover .fa{
+    transform: translateY(-2vw) scale(.7);
+}
+
+ul li:hover .text{
+    transform: translateY(-2vw);
+    opacity: 1;
+}
+
+h2{
+    padding-top: 10%;
+    font-size: 5em;
+    color: #EFFFFB;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+
+
+@media(max-width: 767px){
+    ul li {
+        width: 100%;
+    }
+}

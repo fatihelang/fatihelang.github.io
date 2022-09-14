@@ -1,0 +1,121 @@
+@font-face {
+    font-family: 'dense';
+    src: url(dense/Dense-Regular.otf);
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'dense';
+    box-sizing: border-box;
+}
+
+.home{
+    height: 100vh;
+    width: 100%;
+    background-color: #272727 ;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.logo{
+    color: #EFFFFB;
+    font-size: 6.5vw;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-top: 2vw;
+    padding-left: 2vw;
+    position: absolute;
+   text-decoration: none;
+   z-index: 999;
+}
+
+.logo span{
+    color: #50D890;
+}
+
+.logo:hover{
+    color: #50D890;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span:hover{
+    color: #EFFFFB;
+    width: 50px;
+    height: 50px;
+}
+
+.isi{
+    width: 100%;
+}
+
+.isi .judul{
+    width: 100%;
+    float: left;
+    
+}
+
+.isi .judul h1{
+    padding-top: 10%;
+    font-size: 5em;
+    color: #EFFFFB;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 60px;
+    background: #272727;
+    position: relative;
+    animation: text 3s 1;
+}
+
+.aku{
+    float: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+@keyframes text {
+    0%{
+        color: #272727;
+        margin-bottom: -5px;
+    }
+    30%{
+        letter-spacing: 25px;
+        margin-bottom: -5px;
+    }
+    85%{
+        color: #50D890;
+        letter-spacing: 8px;
+        margin-bottom: -5px;
+    }
+}
+
+h4{ 
+    text-align: center;
+    color: #EFFFFB;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    animation: aku 3s 1;
+}
+
+
+@keyframes aku {
+    0%{
+        color: transparent;
+        margin-bottom: -5px;}
+    85%{
+        color: transparent;
+        margin-bottom: -5px;
+    }
+}
+
+@media(max-width: 767px){
+    .isi{
+        width: 100%;
+    }
+}
