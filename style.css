@@ -134,6 +134,23 @@
     color: #50D890;
 }
 
+img{
+    display: flex;
+    width: 23vw;
+    opacity: 55%;
+    border-radius: 10px;
+
+}
+
+.gambar{
+    padding-left: 73%;
+    padding-top: 7%;
+}
+
+img:hover{
+    opacity: 90%;
+}
+
 
 @media(max-width: 767px){
     .isi{
