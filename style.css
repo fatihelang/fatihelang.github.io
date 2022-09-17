@@ -53,10 +53,10 @@
 
 .call::after,
 .call::before {
-    content: "Hello, i am";
+    content: "Hai, i am";
     position: absolute;
     top: 10vw;
-    left: 18vw;
+    left: 17.5vw;
     width: 100%;
     color: #EFFFFB;
     font-size: 10vw;
@@ -83,7 +83,7 @@
     content: "Fatih Ali Elang";
     position: absolute;
     top: 18vw;
-    left: 15.2vw;
+    left: 15vw;
     text-align: center;
     width: 100%;
     color: #50D890;
@@ -108,15 +108,15 @@
 
 .study::after,
 .study::before {
-    content: "A  student";
+    content: "An Eager Beaver";
     position: absolute;
     top: 31vw;
-    left: 13.5vw;
+    left: 16.5vw;
     text-align: center;
     width: 100%;
     color: #EFFFFB;
     font-size: 10vw;
-    width: 31vw;
+    width: 40vw;
     height: auto;
 }
 
@@ -127,7 +127,7 @@
 .study::before{
     content: "Dream";
     color: transparent;
-    left: 10vw;
+    left: 5.5vw;
 }
 
 .study:hover::before{
@@ -150,7 +150,6 @@ img{
 img:hover{
     opacity: 90%;
 }
-
 
 @media(max-width: 767px){
     .isi{
