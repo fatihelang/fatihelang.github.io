@@ -10,14 +10,18 @@
     box-sizing: border-box;
 }
 
+
 .home{
     height: 100vh;
     width: 100%;
     background-color: #272727 ;
     background-size: cover;
     background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
-
 
 .logo{
     color: #EFFFFB;
@@ -46,109 +50,140 @@
     height: 50px;
 }
 
-.dream{
-    min-height: 100vh;
-    width: 100%;
-    float: left;
-    background-color: #272727;
-}
-.isi{
-    max-width: 1170px;
-    margin: auto;
+body{
+    background: #272727;
 }
 
-.dream .heading{
-    margin-bottom: 60px;
-    width: 100%;
-    float: left;
-}
-
-.dream .heading h1{
+h2{
     padding-top: 10%;
     font-size: 5em;
     color: #EFFFFB;
     letter-spacing: 2px;
-}
-
-.dream .isi{
-    float: left;
-    width: 100%;
     text-align: center;
 }
-
-.dream .isi .box{
-    width: 33.33%;
-    float: left;
-    padding: 15px;
-}
-
-.dream .isi .box .dalam{
-    padding: 30px;
+.card{
     position: relative;
-    margin: auto;
+    width: 300px;
+    height: 350px;
+    padding:20px;
+    border-radius: 20px;
+    transition: 0.5s;
+    transition-delay: 0.5s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.dream .isi .box .dalam::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    box-sizing: border-box;
-    border-bottom: 3px solid transparent;
-    border-left: 3px solid transparent;
-    transition: all .8s ease;
+.card:hover{
+    width: 600px;
+    transition-delay: 0s;
 }
 
-.dream .isi .box .dalam::after{
-    content: '';
+.card .circle{
     position: absolute;
-    right: 0;
     top: 0;
-    width: 0;
-    height: 0;
-    box-sizing: border-box;
-    border-top: 3px solid transparent;
-    border-right: 3px solid transparent;
-    transition: all .8s ease;
-}
-
-.dream .isi .box:hover .dalam::after,
-.dream .isi .box:hover .dalam::before{
-    border-color: #50D890;
+    left: 0;
     width: 100%;
     height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.dream .isi .box .dalam .icon{
-    font-size: 50px;
+.card .circle::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--clr);
+    clip-path: circle(120px at center);
+    transition: 0.5s;
+}
+
+.card:hover .circle::before{
+    clip-path: circle(400px at center);
+}
+
+.card .circle .icon{
+    position: relative;
+    width: 150px;
+    transition: 0.5s;
+    transition-delay: 0.5s;
+}
+
+.card:hover .circle .icon{
+    transform: scale(0);
+    transition-delay: 0s;
+}
+
+.isi{
+    position: relative;
+    width: 50%;
+    left: 20%;
+    padding: 20px 20px 20px 40px;
+    opacity: 0;
+    transition: 0.5s;
+    visibility: hidden;
+}
+
+.card:hover .isi{
+    left: 0;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.5s;
+}
+
+.isi h3{
     color: #EFFFFB;
-    transition: all .8s ease;
+    text-transform: uppercase;
+    font-size: 3.5em;
+    line-height: 1em;
 }
 
-.dream .isi .box:hover .dalam .icon{
-    color: #50D890;
-}
-.dream .isi .box .dalam h3{
-    font-size: 30px;
-    font-weight: normal;
-    color: #50D890;
-    margin: 20px 0;
-
-}
-
-.dream .isi .box .dalam p{
-    font-size: 1.5em;
-    letter-spacing: 1px;
+.isi p{
     color: #EFFFFB;
-    text-align: center;
-    line-height: 24px;
+    font-size: 2.5em;
 }
 
+.card .icong{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 300px;
+    transition: 0.5s;
+    transition-delay: 0s;
+}
 
-@media(max-width: 767px){
-    .dream .isi .box{
+.card:hover .icong{
+    left: 72%;
+    transform: translate(-50%, -50%) scale(1);
+    transition-delay: 0.5s;
+}
+
+@media (max-width: 991px){
+    .card{
+        width: auto;
+        max-width: 350px;
+        align-items: flex-start;
+    }
+    .card:hover{
+        height: 600px;
+    }
+    .card:hover .icong{
+        top: initial;
+        bottom: 30px;
+        left: 50%;
+        transform: translate(-50%, -0%) scale(1);
+        height: 300px;
+    }
+    .card .isi{
         width: 100%;
+        left: 0;
+        padding: 40px;
     }
 }
