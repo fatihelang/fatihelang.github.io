@@ -165,6 +165,15 @@ h2{
     transition-delay: 0.5s;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #EFFFFB;
+    border-radius: 10px;
+}
+
 @media (max-width: 991px){
     .card{
         width: auto;
