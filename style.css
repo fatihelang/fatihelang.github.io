@@ -137,9 +137,11 @@
 img{
     display: flex;
     width: 23vw;
-    opacity: 55%;
-    border-radius: 10px;
-
+    align-items: center;
+    justify-items: center;
+    filter: saturate(40%);
+    border-radius: 50px;
+    transition: 0.5s;
 }
 
 .gambar{
@@ -148,7 +150,8 @@ img{
 }
 
 img:hover{
-    opacity: 90%;
+    border-radius: 20px;
+    filter: saturate(80%);
 }
 
 @media(max-width: 767px){
