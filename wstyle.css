@@ -1,0 +1,115 @@
+@font-face {
+    font-family: 'dense';
+    src: url(dense/Dense-Regular.otf);
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'dense';
+    box-sizing: border-box;
+}
+
+.home{
+    height: 100vh;
+    width: 100%;
+    background-color: #272727 ;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo{
+    color: #EFFFFB;
+    font-size: 6.5vw;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding-top: 2vw;
+    padding-left: 2vw;
+    position: absolute; 
+   text-decoration: none;
+   z-index: 999;
+}
+
+.logo span{
+    color: #50D890;
+}
+
+.logo:hover{
+    color: #50D890;
+    width: 50px;
+    height: 50px;
+}
+
+.logo span:hover{
+    color: #EFFFFB;
+    width: 50px;
+    height: 50px;
+}
+
+.isi{
+    position: relative;
+    width: 800px;
+    height: 500px;
+    background-color: transparent;
+}
+
+.isi .clip{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: 0.5s;
+}
+
+.isi .clip.clip1{
+    background: url(kaela.jfif);
+    background-size: cover;
+    clip-path: polygon(0 0, 47% 0, 14% 100%, 0 100%);
+}
+
+.isi .clip.clip2{
+    background: url(anya.jpg);
+    background-size: cover;
+    clip-path: polygon(47% 0, 86% 0, 40% 100%, 14% 100%);
+}
+
+.isi .clip.clip3{
+    background: url(risu.jpg);
+    background-size: cover;
+    clip-path: polygon(86% 0, 100% 0, 100% 100%, 40% 100%);
+}
+
+.isi:hover .clip{
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+
+}
+
+.isi .clip:hover{
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+
+}
+
+.konten{
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 70%;
+    padding: 20px;
+    background: #EFFFFB;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+h2{
+    font-size: 50px;
+    color: #272727;
+}
+.isi .clip:hover .konten{
+    bottom: 0;
+    opacity: 65%;
+}
