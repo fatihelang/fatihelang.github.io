@@ -52,8 +52,8 @@
 
 .isi{
     position: relative;
-    width: 800px;
-    height: 500px;
+    width: 100vh;
+    height: 50vh;
     background-color: transparent;
 }
 
@@ -105,7 +105,7 @@
     transition: 0.5s;
 }
 
-h2{
+.konten h2{
     font-size: 50px;
     color: #272727;
 }
