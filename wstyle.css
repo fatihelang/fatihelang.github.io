@@ -73,13 +73,13 @@
 }
 
 .isi .clip.clip2{
-    background: url(risus.jpg);
+    background: url(king.jpg);
     background-size: cover;
     clip-path: polygon(47% 0, 86% 0, 40% 100%, 14% 100%);
 }
 
 .isi .clip.clip3{
-    background: url(anyam.jpg);
+    background: url(anyame.jpg);
     background-size: cover;
     clip-path: polygon(86% 0, 100% 0, 100% 100%, 40% 100%);
 }
