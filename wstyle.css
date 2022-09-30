@@ -114,8 +114,3 @@
     opacity: 65%;
 }
 
-@media (max-width: 767px){
-    .isi{
-        width: 80%;
-    }
-}
