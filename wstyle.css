@@ -73,7 +73,7 @@
 }
 
 .isi .clip.clip2{
-    background: url(risu.jpg);
+    background: url(risus.jpg);
     background-size: cover;
     clip-path: polygon(47% 0, 86% 0, 40% 100%, 14% 100%);
 }
