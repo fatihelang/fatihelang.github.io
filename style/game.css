@@ -1,0 +1,266 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+canvas {
+  z-index: -99;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#game {
+  display: none;
+}
+
+.game-over-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.game-over-message {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.game-over-message img {
+  width: 50%;
+}
+
+#finalScore {
+  font-size: 1.5em;
+  position: relative;
+  top: -50px;
+}
+
+#homeButton, #retryButton {
+  width: 5%;
+  cursor: pointer;
+}
+
+#homeButton {
+  margin-right: 20px;
+}
+
+#homeButton:hover, #retryButton:hover {
+  transform: scale(1.2);
+}
+
+.alert {
+  display: none;
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 25%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+.view {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 55vh;
+  background-color: darkgrey;
+  border: 5px solid black;
+  border-radius: 15px;
+}
+
+.view img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+#timeBarContainer {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 15px;
+  border: 5px solid black;
+}
+
+#timeBar {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+  color: black;
+  font-weight: bold;
+  background-color: rgb(0, 176, 0);
+  transition: width 1s, background-color 1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero {
+  z-index: 10;
+}
+
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 7%;
+  padding-right: 7%;
+}
+
+.hp-bar img {
+  width: 110px;
+  height: auto;
+}
+
+#healthBar, #enemyHealthBar, #stageBar, #score {
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 1.2em;
+}
+
+#scoreStageContainer {
+  position: absolute;
+  width: 100%;
+  top: 10px;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+#score, #stageBar {
+  font-size: 1.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.quiz {
+  margin-top: 20px;
+  display: flex;
+  width: 100%;
+  height: 20vh;
+}
+
+.question {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  border-radius: 20px;
+  font-size: 2.5rem;
+  color: black;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #ffff, #E1E1E1);
+  border: 5px solid black;
+}
+
+.answer {
+  margin-left: 10%;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
+
+.col1, .col2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+}
+
+.col1 > div, .col2 > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 5px;
+}
+
+.item button {
+  cursor: pointer;
+  border-radius: 10px;
+  border: 5px solid black;
+  width: 100%;
+  height: 80%;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  color: white;
+}
+
+#ans1 {
+  background: linear-gradient(to right, #FF004D, #FF00B8);
+}
+
+#ans2 {
+  background: linear-gradient(to right, #001AFF, #00A3FF);
+}
+
+#ans3 {
+  background: linear-gradient(to right, #00FF29, #8FFF00);
+}
+
+#ans4 {
+  background: linear-gradient(to right, #FFD600, #FFB800);
+}
+
+.item button:hover {
+  transform: scale(1.1);
+  font-size: 1.8rem;
+}
+

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Forest</title>
+  <link rel="stylesheet" href="style/main.css">
+  <link rel="icon" href="./assets/game/title2.png">
+</head>
+<body>
+  <canvas id="backgroundCanvas"></canvas>
+  <div id="main-menu" role="main">
+    <h1 id="title">
+      <img src="./assets/game/title2.png" alt="Game Title">
+    </h1>
+    <button id="start-btn" aria-label="Start Game">Start</button>
+  </div>
+  <button id="sound-on" class="sound-btn" aria-label="Sound On">
+    <img src="./assets/sound-off.png" alt="Sound On">
+  </button>
+  <button id="sound-off" class="sound-btn" aria-label="Sound Off">
+    <img src="./assets/sound-on.png" alt="Sound Off">
+  </button>
+  <div id="non-desktop-warning">
+    <p>This game is best experienced on a desktop screen.</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script/main.js"></script>
+  <script src="script/background.js"></script>
+</body>
+</html>
