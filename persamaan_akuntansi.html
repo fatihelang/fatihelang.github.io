@@ -15,18 +15,11 @@
         .btn-primary:hover { background-color: #4338ca; }
         .btn-secondary { background-color: #e2e8f0; color: #1e293b; }
         .btn-secondary:hover { background-color: #cbd5e1; }
-        /* Gaya untuk Tab Laporan */
         .tab-button { display: inline-flex; align-items: center; gap: 0.5rem; color: #475569; border-bottom: 3px solid transparent; padding: 0.75rem 0.5rem; margin-bottom: -2px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
         .tab-button:hover { color: #1e293b; }
         .active-tab { color: #4f46e5; border-bottom-color: #4f46e5; }
     </style>
 </head>
-
-  <!-- Versi SVG (direkomendasikan browser modern) -->
-<link rel="icon" type="image/svg+xml" href="assets/bird.svg">
-
-<!-- (Opsional) fallback untuk browser lama -->
-<link rel="alternate icon" type="image/png" href="assets/bird.svg">
 <body class="text-slate-800">
 
     <div class="container mx-auto p-4 md:p-6 max-w-7xl">
@@ -53,24 +46,25 @@
                         <label for="transaction-type" class="block text-sm font-medium text-slate-600 mb-1">Jenis Transaksi</label>
                         <select id="transaction-type" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                             <option value="" disabled selected>-- Pilih Jenis Transaksi --</option>
-                            <option value="setoran-pemilik">1. Setoran Modal Pemilik (Gabungan)</option>
-                            <option value="pendapatan-tunai">2. Terima Pendapatan Tunai</option>
-                            <option value="terima-pinjaman">3. Terima Pinjaman/Hutang</option>
-                            <option value="bayar-hutang">4. Pembayaran Hutang</option>
-                            <option value="bayar-beban">5. Pembayaran Beban</option>
-                            <option value="prive">6. Prive (Penarikan Modal)</option>
-                            <option value="beli-aset-tunai">7. Pembelian Aset Tunai (Gabungan)</option>
-                            <option value="beli-aset-kredit">8. Pembelian Aset Kredit (Gabungan)</option>
-                            <option value="pakai-perlengkapan">9. Pemakaian Perlengkapan</option>
-                            <option value="penyusutan-peralatan">10. Penyusutan Peralatan</option>
+                            <option value="setoran-pemilik">1. Setoran Modal Pemilik</option>
+                            <option value="pendapatan-tunai">2. Terima Pendapatan (Tunai)</option>
+                            <option value="pendapatan-kredit">3. Terima Pendapatan (Kredit/Piutang)</option>
+                            <option value="terima-pinjaman">4. Terima Pinjaman/Hutang</option>
+                            <option value="bayar-hutang">5. Pembayaran Hutang</option>
+                            <option value="bayar-beban">6. Pembayaran Beban</option>
+                            <option value="prive">7. Prive (Penarikan Modal)</option>
+                            <option value="beli-aset-tunai">8. Pembelian Aset (Tunai)</option>
+                            <option value="beli-aset-kredit">9. Pembelian Aset (Kredit)</option>
+                            <option value="pakai-perlengkapan">10. Pemakaian Perlengkapan</option>
+                            <option value="penyusutan-peralatan">11. Penyusutan Peralatan</option>
                         </select>
                     </div>
                     <div>
                         <label for="description" class="block text-sm font-medium text-slate-600 mb-1">Keterangan</label>
-                        <input type="text" id="description" placeholder="Contoh: Investasi awal" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                        <input type="text" id="description" placeholder="Contoh: Jasa desain untuk PT Maju" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                     </div>
                     <div id="cash-container">
-                        <label for="amount-cash" class="block text-sm font-medium text-slate-600 mb-1">Jumlah Tunai (Rp)</label>
+                        <label for="amount-cash" class="block text-sm font-medium text-slate-600 mb-1">Jumlah (Rp)</label>
                         <input type="text" inputmode="numeric" id="amount-cash" placeholder="0" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div id="asset-purchase-container" class="hidden space-y-2 border-t pt-3 mt-3">
@@ -85,13 +79,17 @@
                         </div>
                     </div>
                     <div id="asset-investment-container" class="hidden space-y-2 border-t pt-3 mt-3">
-                        <label class="block text-sm font-bold text-slate-700">Detail Aset Investasi (Opsional)</label>
-                        <div>
-                             <label for="amount-perlengkapan-inv" class="block text-sm font-medium text-slate-600 mb-1">Nilai Perlengkapan (Rp)</label>
+                        <label class="block text-sm font-bold text-slate-700">Detail Aset Investasi</label>
+                        <div class="flex items-center space-x-2">
+                             <label for="amount-cash-inv" class="w-24 text-sm font-medium text-slate-600">Tunai:</label>
+                             <input type="text" inputmode="numeric" id="amount-cash-inv" placeholder="0" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                        <div class="flex items-center space-x-2">
+                             <label for="amount-perlengkapan-inv" class="w-24 text-sm font-medium text-slate-600">Perlengkapan:</label>
                              <input type="text" inputmode="numeric" id="amount-perlengkapan-inv" placeholder="0" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
-                        <div>
-                             <label for="amount-peralatan-inv" class="block text-sm font-medium text-slate-600 mb-1">Nilai Peralatan (Rp)</label>
+                        <div class="flex items-center space-x-2">
+                             <label for="amount-peralatan-inv" class="w-24 text-sm font-medium text-slate-600">Peralatan:</label>
                              <input type="text" inputmode="numeric" id="amount-peralatan-inv" placeholder="0" class="block w-full border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                     </div>
@@ -106,17 +104,18 @@
                 <div class="card p-6">
                     <h2 class="text-xl font-bold mb-4 border-b border-slate-200 pb-3 text-slate-800">Tabel Persamaan Akuntansi</h2>
                     <div class="overflow-x-auto">
-                        <table class="w-full min-w-[800px] text-sm text-left">
+                        <table class="w-full min-w-[900px] text-sm text-left">
                             <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
                                 <tr>
                                     <th rowspan="2" class="py-3 px-4 font-semibold">Tanggal</th>
-                                    <th colspan="3" class="py-3 px-4 text-center font-semibold border-l border-slate-200">Aktiva</th>
+                                    <th colspan="4" class="py-3 px-4 text-center font-semibold border-l border-slate-200">Aktiva</th>
                                     <th colspan="2" class="py-3 px-4 text-center font-semibold border-l border-slate-200">Pasiva</th>
                                     <th rowspan="2" class="py-3 px-4 font-semibold border-l border-slate-200">Keterangan</th>
                                     <th rowspan="2" class="py-3 px-4 font-semibold border-l border-slate-200">Aksi</th>
                                 </tr>
                                 <tr>
                                     <th class="py-3 px-4 text-center font-semibold border-t border-l border-slate-200">Kas</th>
+                                    <th class="py-3 px-4 text-center font-semibold border-t border-l border-slate-200">Piutang</th>
                                     <th class="py-3 px-4 text-center font-semibold border-t border-l border-slate-200">Perlengkapan</th>
                                     <th class="py-3 px-4 text-center font-semibold border-t border-l border-slate-200">Peralatan</th>
                                     <th class="py-3 px-4 text-center font-semibold border-t border-l border-slate-200">Hutang</th>
@@ -128,6 +127,7 @@
                                 <tr class="bg-slate-50">
                                     <td class="py-3 px-4">Total Akhir</td>
                                     <td id="total-kas" class="py-3 px-4 text-right border-l border-slate-200">0</td>
+                                    <td id="total-piutang" class="py-3 px-4 text-right border-l border-slate-200">0</td>
                                     <td id="total-perlengkapan" class="py-3 px-4 text-right border-l border-slate-200">0</td>
                                     <td id="total-peralatan" class="py-3 px-4 text-right border-l border-slate-200">0</td>
                                     <td id="total-hutang" class="py-3 px-4 text-right border-l border-slate-200">0</td>
@@ -135,7 +135,7 @@
                                     <td colspan="2" class="py-3 px-4 border-l border-slate-200"></td>
                                 </tr>
                                 <tr id="balance-row" class="bg-indigo-50">
-                                    <td colspan="4" class="py-3 px-4 text-center text-indigo-800">Total Aktiva: <span id="total-aktiva" class="text-lg font-bold">Rp 0</span></td>
+                                    <td colspan="5" class="py-3 px-4 text-center text-indigo-800">Total Aktiva: <span id="total-aktiva" class="text-lg font-bold">Rp 0</span></td>
                                     <td colspan="4" class="py-3 px-4 text-center text-indigo-800 border-l border-indigo-200">Total Pasiva: <span id="total-pasiva" class="text-lg font-bold">Rp 0</span></td>
                                 </tr>
                             </tfoot>
@@ -145,26 +145,27 @@
                 
                 <div class="card">
                     <div class="border-b border-slate-200 px-4">
-                        <nav class="flex space-x-2" aria-label="Tabs">
-                            <button class="tab-button active-tab" data-tab="laba-rugi">Laba Rugi</button>
-                            <button class="tab-button" data-tab="perubahan-modal">Perubahan Modal</button>
-                            <button class="tab-button" data-tab="neraca">Neraca</button>
-                        </nav>
+                        <nav class="flex space-x-2" aria-label="Tabs"><button class="tab-button active-tab" data-tab="laba-rugi">Laba Rugi</button><button class="tab-button" data-tab="perubahan-modal">Perubahan Modal</button><button class="tab-button" data-tab="neraca">Neraca</button></nav>
                     </div>
-                    <div class="p-6">
-                        <div id="laba-rugi" class="tab-content"></div>
-                        <div id="perubahan-modal" class="tab-content hidden"></div>
-                        <div id="neraca" class="tab-content hidden"></div>
-                    </div>
+                    <div class="p-6"><div id="laba-rugi" class="tab-content"></div><div id="perubahan-modal" class="tab-content hidden"></div><div id="neraca" class="tab-content hidden"></div></div>
                 </div>
-
             </div>
         </main>
     </div>
 
+    <footer class="text-center mt-12 py-4 border-t border-slate-200">
+            <p class="text-sm text-slate-500">
+                Dibuat oleh 
+                <a href="https://www.instagram.com/its_eyak/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    its_eyak
+                </a>
+            </p>
+        </footer>
+        </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // === DOM Elements ===
     const form = document.getElementById('transaction-form');
     const transactionIdInput = document.getElementById('transaction-id');
     const dateInput = document.getElementById('date');
@@ -180,31 +181,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const amountCashInput = document.getElementById('amount-cash');
     const amountPerlengkapanBeliInput = document.getElementById('amount-perlengkapan-beli');
     const amountPeralatanBeliInput = document.getElementById('amount-peralatan-beli');
+    const amountCashInvInput = document.getElementById('amount-cash-inv');
     const amountPerlengkapanInvInput = document.getElementById('amount-perlengkapan-inv');
     const amountPeralatanInvInput = document.getElementById('amount-peralatan-inv');
 
-    // === Data Store ===
-    let transactions = JSON.parse(localStorage.getItem('transactions_final_v3')) || [];
+    let transactions = JSON.parse(localStorage.getItem('transactions_with_piutang_v2')) || [];
 
-    // === Helper Functions ===
     const parseCurrency = (value) => parseFloat(String(value).replace(/\./g, '')) || 0;
     const formatCurrency = (amount) => Number(amount).toLocaleString('id-ID');
     const setupCurrencyInput = (input) => { input.addEventListener('input', (e) => { e.target.value = formatCurrency(parseCurrency(e.target.value)); }); };
-    [amountCashInput, amountPerlengkapanBeliInput, amountPeralatanBeliInput, amountPerlengkapanInvInput, amountPeralatanInvInput].forEach(setupCurrencyInput);
+    [amountCashInput, amountPerlengkapanBeliInput, amountPeralatanBeliInput, amountCashInvInput, amountPerlengkapanInvInput, amountPeralatanInvInput].forEach(setupCurrencyInput);
     
     const resetForm = () => {
         form.reset(); transactionIdInput.value = ''; dateInput.valueAsDate = new Date();
         cashContainer.classList.remove('hidden'); assetPurchaseContainer.classList.add('hidden'); assetInvestmentContainer.classList.add('hidden');
-        document.querySelector('label[for="amount-cash"]').textContent = "Jumlah Tunai (Rp)";
     };
 
     transactionTypeSelect.addEventListener('change', (e) => {
         const type = e.target.value; const currentDesc = descriptionInput.value; const currentDate = dateInput.value;
         resetForm();
         transactionTypeSelect.value = type; descriptionInput.value = currentDesc; dateInput.value = currentDate;
-        if (type === 'setoran-pemilik') { cashContainer.classList.remove('hidden'); assetInvestmentContainer.classList.remove('hidden'); } 
-        else if (type === 'beli-aset-tunai' || type === 'beli-aset-kredit') {
-            assetPurchaseContainer.classList.remove('hidden');
+        
+        if (type === 'setoran-pemilik') assetInvestmentContainer.classList.remove('hidden');
+        else if (type === 'beli-aset-tunai' || type === 'beli-aset-kredit') assetPurchaseContainer.classList.remove('hidden');
+        
+        if (['setoran-pemilik', 'beli-aset-tunai', 'beli-aset-kredit'].includes(type)) {
             cashContainer.classList.add('hidden');
         }
     });
@@ -212,18 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = transactionIdInput.value, date = dateInput.value, type = transactionTypeSelect.value, description = descriptionInput.value;
-        const amountCash = parseCurrency(amountCashInput.value), amountPerlengkapanBeli = parseCurrency(amountPerlengkapanBeliInput.value);
-        const amountPeralatanBeli = parseCurrency(amountPeralatanBeliInput.value), amountPerlengkapanInv = parseCurrency(amountPerlengkapanInvInput.value);
-        const amountPeralatanInv = parseCurrency(amountPeralatanInvInput.value);
+        const amountCash = parseCurrency(amountCashInput.value);
+        const amountPerlengkapanBeli = parseCurrency(amountPerlengkapanBeliInput.value), amountPeralatanBeli = parseCurrency(amountPeralatanBeliInput.value);
+        const amountCashInv = parseCurrency(amountCashInvInput.value), amountPerlengkapanInv = parseCurrency(amountPerlengkapanInvInput.value), amountPeralatanInv = parseCurrency(amountPeralatanInvInput.value);
+        
         if (!date || !description || !type) { alert('Harap isi semua kolom utama.'); return; }
         const newTx = { id: id || Date.now().toString(), date, type, description,
-            details: { amountCash, amountPerlengkapanBeli, amountPeralatanBeli, amountPerlengkapanInv, amountPeralatanInv },
-            kas: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0, isPendapatan: false, isBeban: false, isPrive: false
+            details: { amountCash, amountPerlengkapanBeli, amountPeralatanBeli, amountCashInv, amountPerlengkapanInv, amountPeralatanInv },
+            kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0, isPendapatan: false, isBeban: false, isPrive: false
         };
         switch (type) {
             case 'setoran-pemilik':
-                newTx.kas = amountCash; newTx.perlengkapan = amountPerlengkapanInv; newTx.peralatan = amountPeralatanInv;
-                newTx.modal = amountCash + amountPerlengkapanInv + amountPeralatanInv; break;
+                newTx.kas = amountCashInv; newTx.perlengkapan = amountPerlengkapanInv; newTx.peralatan = amountPeralatanInv;
+                newTx.modal = amountCashInv + amountPerlengkapanInv + amountPeralatanInv; break;
+            case 'pendapatan-kredit':
+                newTx.piutang = amountCash; newTx.modal = amountCash; newTx.isPendapatan = true; break;
             case 'beli-aset-kredit':
                 newTx.perlengkapan = amountPerlengkapanBeli; newTx.peralatan = amountPeralatanBeli;
                 newTx.hutang = amountPerlengkapanBeli + amountPeralatanBeli; break;
@@ -245,15 +249,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const renderTable = () => {
         tableBody.innerHTML = '';
-        if (!transactions.length) { tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-500">Belum ada transaksi.</td></tr>`; return; }
+        if (!transactions.length) { tableBody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-slate-500">Belum ada transaksi.</td></tr>`; return; }
         transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
-        let runningTotals = { kas: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0 };
+        let runningTotals = { kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0 };
         transactions.forEach(tx => {
             const row = document.createElement('tr'); row.className = 'hover:bg-slate-50 border-b';
             const valueCell = val => `<td class="py-3 px-4 text-right ${val > 0 ? 'text-green-600' : val < 0 ? 'text-red-600' : ''}">${val !== 0 ? formatCurrency(val) : ''}</td>`;
-            row.innerHTML = `<td class="py-3 px-4">${tx.date}</td>${valueCell(tx.kas)}${valueCell(tx.perlengkapan)}${valueCell(tx.peralatan)}${valueCell(tx.hutang)}${valueCell(tx.modal)}<td class="py-3 px-4 text-slate-600">${tx.description}</td><td class="py-3 px-4"><div class="flex items-center space-x-2"><button onclick="editTransaction('${tx.id}')" title="Edit" class="text-sm p-1">✏️</button><button onclick="deleteTransaction('${tx.id}')" title="Hapus" class="text-sm p-1">🗑️</button></div></td>`;
+            row.innerHTML = `<td class="py-3 px-4">${tx.date}</td>${valueCell(tx.kas)}${valueCell(tx.piutang)}${valueCell(tx.perlengkapan)}${valueCell(tx.peralatan)}${valueCell(tx.hutang)}${valueCell(tx.modal)}<td class="py-3 px-4 text-slate-600">${tx.description}</td><td class="py-3 px-4"><div class="flex items-center space-x-2"><button onclick="editTransaction('${tx.id}')" title="Edit" class="text-sm p-1">✏️</button><button onclick="deleteTransaction('${tx.id}')" title="Hapus" class="text-sm p-1">🗑️</button></div></td>`;
             tableBody.appendChild(row);
-            Object.keys(runningTotals).forEach(key => runningTotals[key] += tx[key]);
+            Object.keys(runningTotals).forEach(key => runningTotals[key] += tx[key] || 0);
             const subtotalRow = document.createElement('tr'); subtotalRow.className = 'bg-slate-100 font-semibold text-slate-600 text-sm';
             subtotalRow.innerHTML = `<td class="py-2 px-4 italic">Saldo</td>${Object.values(runningTotals).map(val => `<td class="py-2 px-4 text-right">${formatCurrency(val)}</td>`).join('')}<td colspan="2"></td>`;
             tableBody.appendChild(subtotalRow);
@@ -263,40 +267,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const calculateTotals = () => {
         const totals = transactions.reduce((acc, tx) => {
             Object.keys(acc).forEach(key => acc[key] += tx[key] || 0); return acc;
-        }, { kas: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0 });
-        Object.keys(totals).forEach(key => { document.getElementById(`total-${key}`).textContent = formatCurrency(totals[key]); });
-        const totalAktiva = totals.kas + totals.perlengkapan + totals.peralatan;
+        }, { kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, hutang: 0, modal: 0 });
+        Object.keys(totals).forEach(key => {
+            const el = document.getElementById(`total-${key}`);
+            if (el) el.textContent = formatCurrency(totals[key]);
+        });
+        const totalAktiva = totals.kas + totals.piutang + totals.perlengkapan + totals.peralatan;
         const totalPasiva = totals.hutang + totals.modal;
         document.getElementById('total-aktiva').textContent = `Rp ${formatCurrency(totalAktiva)}`;
         document.getElementById('total-pasiva').textContent = `Rp ${formatCurrency(totalPasiva)}`;
         const balanceRow = document.getElementById('balance-row');
-        balanceRow.className = 'lg:col-span-2 space-y-6 ' + (Math.round(totalAktiva) === Math.round(totalPasiva) ? 'bg-indigo-50 text-indigo-800' : 'bg-red-100 text-red-800');
+        balanceRow.className = Math.round(totalAktiva) === Math.round(totalPasiva) ? 'bg-indigo-50 text-indigo-800' : 'bg-red-100 text-red-800';
         return totals;
     };
     
-    // -- REVISI DIMULAI DI SINI --
     const renderFinancialReports = () => {
-        // 1. Tentukan tanggal terakhir untuk judul laporan
-        let lastDate;
-        if (transactions.length === 0) {
-            lastDate = new Date(); // Default ke hari ini jika tidak ada transaksi
-        } else {
-            // Cari tanggal maksimal dari semua transaksi
-            const dates = transactions.map(tx => new Date(tx.date));
-            lastDate = new Date(Math.max.apply(null, dates));
-        }
-
-        // 2. Format tanggal sesuai standar Indonesia
-        const formattedLastDate = new Intl.DateTimeFormat('id-ID', {
-            day: 'numeric', month: 'long', year: 'numeric'
-        }).format(lastDate);
-
-        // 3. Buat judul dinamis untuk setiap laporan
+        let lastDate = transactions.length ? new Date(Math.max.apply(null, transactions.map(tx => new Date(tx.date)))) : new Date();
+        const formattedLastDate = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(lastDate);
         const reportTitle = (title, subtitle) => `<div class="text-center mb-4"><h3 class="text-lg font-bold text-slate-800">${title}</h3><p class="text-sm text-slate-500">${subtitle}</p></div>`;
         const periodSubtitle = `Untuk Periode yang Berakhir ${formattedLastDate}`;
         const positionSubtitle = `Per ${formattedLastDate}`;
 
-        // --- Data Calculation ---
         const totalRevenue = transactions.filter(tx => tx.isPendapatan).reduce((sum, tx) => sum + tx.modal, 0);
         const totalExpense = transactions.filter(tx => tx.isBeban).reduce((sum, tx) => sum + tx.modal, 0);
         const netIncome = totalRevenue + totalExpense;
@@ -305,7 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalCapital = initialCapital + netIncome + totalPrive;
         const finalTotals = calculateTotals();
 
-        // --- 1. Laporan Laba Rugi ---
         document.getElementById('laba-rugi').innerHTML = `
             ${reportTitle('Laporan Laba Rugi', periodSubtitle)}
             <div class="space-y-3 text-sm">
@@ -318,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <hr class="my-3 border-t-2"><div class="flex justify-between font-bold text-base"><span>${netIncome >= 0 ? 'Laba Bersih' : 'Rugi Bersih'}</span><span>Rp ${formatCurrency(netIncome)}</span></div>
             </div>`;
 
-        // --- 2. Laporan Perubahan Modal ---
         document.getElementById('perubahan-modal').innerHTML = `
             ${reportTitle('Laporan Perubahan Modal', periodSubtitle)}
             <dl class="space-y-2 text-sm">
@@ -329,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <hr class="my-2 border-t-2"><div class="flex justify-between font-bold text-base mt-2"><span>Modal Akhir</span><span>Rp ${formatCurrency(finalCapital)}</span></div>
             </dl>`;
         
-        // --- 3. Laporan Neraca ---
         document.getElementById('neraca').innerHTML = `
             ${reportTitle('Laporan Posisi Keuangan (Neraca)', positionSubtitle)}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 text-sm">
@@ -337,10 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4 class="font-bold text-slate-800 border-b pb-2 mb-2">AKTIVA</h4>
                     <dl class="space-y-2">
                         <div class="flex justify-between"><dt>Kas</dt><dd>Rp ${formatCurrency(finalTotals.kas)}</dd></div>
+                        <div class="flex justify-between"><dt>Piutang Usaha</dt><dd>Rp ${formatCurrency(finalTotals.piutang)}</dd></div>
                         <div class="flex justify-between"><dt>Perlengkapan</dt><dd>Rp ${formatCurrency(finalTotals.perlengkapan)}</dd></div>
                         <div class="flex justify-between"><dt>Peralatan</dt><dd>Rp ${formatCurrency(finalTotals.peralatan)}</dd></div>
                     </dl>
-                    <div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Aktiva</span><span>Rp ${formatCurrency(finalTotals.kas + finalTotals.perlengkapan + finalTotals.peralatan)}</span></div>
+                    <div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Aktiva</span><span>Rp ${formatCurrency(finalTotals.kas + finalTotals.piutang + finalTotals.perlengkapan + finalTotals.peralatan)}</span></div>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <h4 class="font-bold text-slate-800 border-b pb-2 mb-2">LIABILITAS & EKUITAS</h4>
@@ -354,46 +343,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>`;
     };
-     // -- REVISI SELESAI --
 
     window.editTransaction = (id) => {
         const tx = transactions.find(t => t.id === id); if (!tx) return;
         transactionIdInput.value = tx.id; dateInput.value = tx.date; transactionTypeSelect.value = tx.type; descriptionInput.value = tx.description;
         transactionTypeSelect.dispatchEvent(new Event('change'));
-        amountCashInput.value = formatCurrency(tx.details.amountCash || 0); amountPerlengkapanBeliInput.value = formatCurrency(tx.details.amountPerlengkapanBeli || 0);
-        amountPeralatanBeliInput.value = formatCurrency(tx.details.amountPeralatanBeli || 0); amountPerlengkapanInvInput.value = formatCurrency(tx.details.amountPerlengkapanInv || 0);
+        amountCashInput.value = formatCurrency(tx.details.amountCash || 0);
+        amountPerlengkapanBeliInput.value = formatCurrency(tx.details.amountPerlengkapanBeli || 0);
+        amountPeralatanBeliInput.value = formatCurrency(tx.details.amountPeralatanBeli || 0);
+        amountCashInvInput.value = formatCurrency(tx.details.amountCashInv || 0);
+        amountPerlengkapanInvInput.value = formatCurrency(tx.details.amountPerlengkapanInv || 0);
         amountPeralatanInvInput.value = formatCurrency(tx.details.amountPeralatanInv || 0);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.deleteTransaction = (id) => {
-        if (confirm('Yakin ingin menghapus transaksi ini?')) {
-            transactions = transactions.filter(tx => tx.id !== id);
-            render();
-        }
-    };
+    window.deleteTransaction = (id) => { if (confirm('Yakin?')) { transactions = transactions.filter(tx => tx.id !== id); render(); }};
 
     const render = () => {
-        calculateTotals();
-        renderTable();
-        renderFinancialReports();
-        localStorage.setItem('transactions_final_v3', JSON.stringify(transactions));
+        calculateTotals(); renderTable(); renderFinancialReports();
+        localStorage.setItem('transactions_with_piutang_v2', JSON.stringify(transactions));
         resetForm();
     };
 
     const setupTabs = () => {
-        const tabs = document.querySelectorAll('.tab-button');
-        const contents = document.querySelectorAll('.tab-content');
+        const tabs = document.querySelectorAll('.tab-button'); const contents = document.querySelectorAll('.tab-content');
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                tabs.forEach(item => item.classList.remove('active-tab'));
-                tab.classList.add('active-tab');
-                contents.forEach(content => content.classList.add('hidden'));
-                document.getElementById(tab.dataset.tab).classList.remove('hidden');
+                tabs.forEach(item => item.classList.remove('active-tab')); tab.classList.add('active-tab');
+                contents.forEach(content => content.classList.add('hidden')); document.getElementById(tab.dataset.tab).classList.remove('hidden');
             });
         });
     };
-
     clearFormBtn.addEventListener('click', resetForm);
     setupTabs();
     render();
