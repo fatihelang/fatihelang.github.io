@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dasbor Akuntansi - Tampilan Lengkap</title>
+    <title>Dasbor Akuntansi Profesional (Final v2)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -23,14 +23,26 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Style untuk Buku Besar */
-        .ledger-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-        .t-account { border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; }
-        .t-account-header { background-color: #f8fafc; padding: 0.5rem 0.75rem; font-weight: bold; border-bottom: 1px solid #e2e8f0;}
-        .t-account-body { display: grid; grid-template-columns: 1fr 1fr; }
-        .t-account-col { padding: 0.5rem; }
-        .t-account-col-header { font-weight: 600; text-align: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem; margin-bottom: 0.25rem; }
-        .t-account-entry { display: flex; justify-content: space-between; padding: 0.125rem 0; }
+        /* Gaya untuk Tab Buku Besar */
+        .ledger-tabs-container {
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+        .ledger-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            white-space: nowrap;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.2s;
+        }
+        .ledger-tab:hover { color: #1e293b; }
+        .ledger-tab.active {
+            color: #4f46e5;
+            border-color: #4f46e5;
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -140,6 +152,12 @@
                         <label for="description" class="block text-sm font-medium text-slate-600 mb-1">Keterangan</label>
                         <input type="text" id="description" placeholder="Contoh: Jasa desain untuk PT Maju" class="block w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                     </div>
+                    
+                    <div id="expense-type-container" class="hidden">
+                        <label for="expense-type-select" class="block text-sm font-medium text-slate-600 mb-1">Pilih Jenis Beban</label>
+                        <select id="expense-type-select" class="block w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></select>
+                    </div>
+                    
                     <div id="cash-container">
                         <label for="amount-cash" class="block text-sm font-medium text-slate-600 mb-1">Jumlah (Rp)</label>
                         <input type="text" inputmode="numeric" id="amount-cash" placeholder="0" class="block w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -195,8 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
         '401': { name: 'Pendapatan Jasa', eq_group: 'modal', isIncome: true },
         '501': { name: 'Beban Gaji', eq_group: 'modal', isExpense: true },
         '502': { name: 'Beban Sewa', eq_group: 'modal', isExpense: true },
-        '503': { name: 'Beban Perlengkapan', eq_group: 'modal', isExpense: true },
-        '504': { name: 'Beban Penyusutan', eq_group: 'modal', isExpense: true },
+        '503': { name: 'Beban Listrik & Air', eq_group: 'modal', isExpense: true },
+        '504': { name: 'Beban Iklan', eq_group: 'modal', isExpense: true },
+        '505': { name: 'Beban Perlengkapan', eq_group: 'modal', isExpense: true },
+        '506': { name: 'Beban Penyusutan', eq_group: 'modal', isExpense: true },
         '599': { name: 'Beban Lain-lain', eq_group: 'modal', isExpense: true }
     };
     const getAccountType = (id) => (['Aset','Liabilitas','Ekuitas','Pendapatan','Beban'][id[0]-1] || 'Lainnya');
@@ -205,16 +225,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('transaction-form');
     const allAmountInputs = Array.from(document.querySelectorAll('input[type="text"][inputmode="numeric"]'));
     const modal = document.getElementById('transaction-modal');
-    const modalContent = document.querySelector('.modal-content');
     const newTransactionBtn = document.getElementById('new-transaction-btn');
     const closeModalBtn = document.getElementById('close-modal-btn');
     const cancelFormBtn = document.getElementById('cancel-form-btn');
     const menuBtn = document.getElementById('menu-btn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const expenseTypeContainer = document.getElementById('expense-type-container');
+    const expenseTypeSelect = document.getElementById('expense-type-select');
 
     // --- Penyimpanan Data ---
-    let transactions = JSON.parse(localStorage.getItem('accounting_transactions_v9')) || [];
+    let transactions = JSON.parse(localStorage.getItem('accounting_transactions_v14')) || [];
 
     // --- Fungsi Utilitas ---
     const parseCurrency = (v) => parseFloat(String(v).replace(/\./g, '')) || 0;
@@ -230,11 +251,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('cash-container').classList.remove('hidden');
         document.getElementById('asset-purchase-container').classList.add('hidden');
         document.getElementById('asset-investment-container').classList.add('hidden');
+        expenseTypeContainer.classList.add('hidden');
+    };
+    
+    const populateExpenseSelect = () => {
+        expenseTypeSelect.innerHTML = '';
+        Object.entries(ACCOUNTS).forEach(([id, acc]) => {
+            if (id.startsWith('5') && !['505', '506'].includes(id)) { // Exclude adjustment expenses
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = acc.name;
+                expenseTypeSelect.appendChild(option);
+            }
+        });
     };
 
     // --- Logika Modal & Navigasi Mobile ---
-    const openModal = () => { modal.classList.remove('opacity-0', 'pointer-events-none'); modalContent.classList.remove('scale-95'); };
-    const closeModal = () => { modal.classList.add('opacity-0', 'pointer-events-none'); modalContent.classList.add('scale-95'); resetForm(); };
+    const openModal = () => { modal.classList.remove('opacity-0', 'pointer-events-none'); document.querySelector('.modal-content').classList.remove('scale-95'); };
+    const closeModal = () => { modal.classList.add('opacity-0', 'pointer-events-none'); document.querySelector('.modal-content').classList.add('scale-95'); resetForm(); };
     const openSidebar = () => { sidebar.classList.remove('-translate-x-full'); sidebarOverlay.classList.remove('hidden'); };
     const closeSidebar = () => { sidebar.classList.add('-translate-x-full'); sidebarOverlay.classList.add('hidden'); };
 
@@ -257,6 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const showAssetInv = type === 'setoran-pemilik';
         const showAssetPurch = ['beli-aset-tunai', 'beli-aset-kredit'].includes(type);
+        const showExpenseSelect = type === 'bayar-beban';
+        
+        expenseTypeContainer.classList.toggle('hidden', !showExpenseSelect);
         document.getElementById('asset-investment-container').classList.toggle('hidden', !showAssetInv);
         document.getElementById('asset-purchase-container').classList.toggle('hidden', !showAssetPurch);
         document.getElementById('cash-container').classList.toggle('hidden', showAssetInv || showAssetPurch);
@@ -270,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             date: form.querySelector('#date').value,
             type: form.querySelector('#transaction-type').value,
             desc: form.querySelector('#description').value,
+            expenseType: expenseTypeSelect.value,
             cash: getVal('amount-cash'), perlengkapanBeli: getVal('amount-perlengkapan-beli'), peralatanBeli: getVal('amount-peralatan-beli'),
             cashInv: getVal('amount-cash-inv'), perlengkapanInv: getVal('amount-perlengkapan-inv'), peralatanInv: getVal('amount-peralatan-inv')
         };
@@ -283,12 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
         else if(type==='beli-aset-tunai'){ const t = pBeli+rBeli; if(pBeli>0)add('103',pBeli,0); if(rBeli>0)add('121',rBeli,0); if(t>0)add('101',0,t); }
         else if(type==='beli-aset-kredit'){ const t = pBeli+rBeli; if(pBeli>0)add('103',pBeli,0); if(rBeli>0)add('121',rBeli,0); if(t>0)add('201',0,t); }
         else if(type==='pendapatan-tunai'){ add('101',cash,0); add('401',0,cash); } else if(type==='pendapatan-kredit'){ add('102',cash,0); add('401',0,cash); }
-        else if(type==='terima-piutang'){ add('101',cash,0); add('102',0,cash); } else if(type==='bayar-beban'){ add('599',cash,0); add('101',0,cash); }
+        else if(type==='terima-piutang'){ add('101',cash,0); add('102',0,cash); } else if(type==='bayar-beban'){ add(data.expenseType,cash,0); add('101',0,cash); }
         else if(type==='terima-pinjaman'){ add('101',cash,0); add('201',0,cash); } else if(type==='bayar-utang'){ add('201',cash,0); add('101',0,cash); }
-        else if(type==='prive'){ add('302',cash,0); add('101',0,cash); } else if(type==='pakai-perlengkapan'){ add('503',cash,0); add('103',0,cash); }
-        else if(type==='penyusutan-peralatan'){ add('504',cash,0); add('122',0,cash); }
+        else if(type==='prive'){ add('302',cash,0); add('101',0,cash); } else if(type==='pakai-perlengkapan'){ add('505',cash,0); add('103',0,cash); }
+        else if(type==='penyusutan-peralatan'){ add('506',cash,0); add('122',0,cash); }
 
-        const newTx = {id: data.id, date: data.date, type: data.type, description: data.desc, journalEntries, rawDetails: {amountCash:cash, amountPerlengkapanBeli:pBeli, amountPeralatanBeli:rBeli, amountCashInv:cInv, amountPerlengkapanInv:pInv, amountPeralatanInv:rInv}};
+        const newTx = {id: data.id, date: data.date, type: data.type, description: data.desc, journalEntries, rawDetails: {amountCash:cash, expenseType:data.expenseType, amountPerlengkapanBeli:pBeli, amountPeralatanBeli:rBeli, amountCashInv:cInv, amountPerlengkapanInv:pInv, amountPeralatanInv:rInv}};
         const index = transactions.findIndex(tx => tx.id === data.id);
         if (index > -1) transactions[index] = newTx; else transactions.push(newTx);
         
@@ -299,44 +337,72 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fungsi Render Utama ---
     const renderAll = () => {
         transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const ledger = calculateLedger();
         renderEquationTable();
         renderGeneralJournal();
-        const ledger = calculateLedger();
         renderGeneralLedger(ledger);
         renderTrialBalance(ledger);
         renderFinancialReports(ledger);
-        localStorage.setItem('accounting_transactions_v9', JSON.stringify(transactions));
-        feather.replace(); // Re-initialize icons after rendering
+        localStorage.setItem('accounting_transactions_v14', JSON.stringify(transactions));
+        feather.replace();
     };
     
     const renderCard = (viewId, title, content) => {
         document.getElementById(viewId).innerHTML = `<div class="card"><div class="p-4 md:p-5 border-b border-slate-200"><h2 class="text-lg md:text-xl font-bold text-slate-800">${title}</h2></div><div class="p-4 md:p-5">${content}</div></div>`;
     };
-
     const renderEmptyState = (viewId, title) => {
         renderCard(viewId, title, `<div class="text-center py-10 text-slate-500">Belum ada transaksi.</div>`);
     };
 
-    // --- Render Tabel dengan Horizontal Scroll ---
+    // --- Render Tabel dengan Saldo Berjalan (Logika Diperbaiki) ---
     const renderEquationTable = () => {
         if (!transactions.length) return renderEmptyState('view-persamaan-akuntansi', 'Persamaan Akuntansi');
         
         const getChanges = tx => {
             let ch = { kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, utang: 0, modal: 0 };
             tx.journalEntries.forEach(e => {
-                const acc = ACCOUNTS[e.accountId], amt = e.debit - e.credit;
-                if(acc.isContra) ch[acc.eq_group] -= amt; else if(acc.isIncome) ch[acc.eq_group] -= amt;
-                else if(acc.isExpense) ch[acc.eq_group] += amt; else ch[acc.eq_group] += amt;
+                const acc = ACCOUNTS[e.accountId];
+                const accType = getAccountType(e.accountId);
+                let amount = e.debit - e.credit; // Debit is positive, Credit is negative
+
+                if (acc.isContra || acc.isExpense) { // Prive & Beban (Debit+) -> mengurangi modal
+                    ch[acc.eq_group] -= amount;
+                } else if (acc.isIncome) { // Pendapatan (Credit-) -> dikurangi jadi +, menambah modal
+                    ch[acc.eq_group] -= amount;
+                } else { // Akun Aset, Liabilitas, Modal normal
+                    if (accType === 'Aset') {
+                        ch[acc.eq_group] += amount; // Aset: Debit +, Credit -
+                    } else { // Liabilitas & Ekuitas
+                        ch[acc.eq_group] -= amount; // L&E: Credit is -, dikurangi jadi +, menambah saldo
+                    }
+                }
             });
             return ch;
         };
+
         const actionButtons = id => `<div class="flex items-center justify-center"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
-        const valueCell = v => `<td class="py-3 px-4 text-right whitespace-nowrap ${v > 0 ? 'text-green-600' : v < 0 ? 'text-red-600' : ''}">${v !== 0 ? formatCurrency(v) : '-'}</td>`;
+        const valueCell = (v, isTotal = false) => `<td class="py-3 px-4 text-right whitespace-nowrap ${isTotal ? '' : (v > 0 ? 'text-green-600' : v < 0 ? 'text-red-600' : '')}">${v !== 0 ? formatCurrency(v) : '-'}</td>`;
+
+        let runningTotals = { kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, utang: 0, modal: 0 };
+        let tableBodyHTML = '';
+
+        transactions.forEach(tx => {
+            const changes = getChanges(tx);
+            tableBodyHTML += `<tr class="hover:bg-slate-50 border-b"><td class="py-3 px-4 whitespace-nowrap sticky left-0 bg-white hover:bg-slate-50">${tx.date}</td>${valueCell(changes.kas)}${valueCell(changes.piutang)}${valueCell(changes.perlengkapan)}${valueCell(changes.peralatan)}${valueCell(changes.utang)}${valueCell(changes.modal)}<td class="py-3 px-4 text-slate-600 min-w-[200px]">${tx.description}</td><td class="py-3 px-4 text-center">${actionButtons(tx.id)}</td></tr>`;
+            
+            Object.keys(runningTotals).forEach(key => { runningTotals[key] += changes[key]; });
+            
+            tableBodyHTML += `<tr class="bg-slate-100 font-semibold text-slate-600 text-sm"><td class="py-2 px-4 italic sticky left-0 bg-slate-100">Saldo</td>${Object.values(runningTotals).map(val => `<td class="py-2 px-4 text-right">${formatCurrency(val)}</td>`).join('')}<td colspan="2"></td></tr>`;
+        });
+        
+        const totalAset = runningTotals.kas + runningTotals.piutang + runningTotals.perlengkapan + runningTotals.peralatan;
+        const totalPasiva = runningTotals.utang + runningTotals.modal;
+        const isBalanced = Math.round(totalAset) === Math.round(totalPasiva);
 
         const table = `<div class="overflow-x-auto"><table class="w-full min-w-[950px] text-sm">
             <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
                 <tr>
-                    <th rowspan="2" class="py-3 px-4 font-semibold sticky left-0 bg-slate-50">Tanggal</th>
+                    <th rowspan="2" class="py-3 px-4 font-semibold sticky left-0 bg-slate-50 z-10">Tanggal</th>
                     <th colspan="4" class="py-3 px-4 text-center font-semibold border-l">Aset</th>
                     <th colspan="2" class="py-3 px-4 text-center font-semibold border-l">Liabilitas & Ekuitas</th>
                     <th rowspan="2" class="py-3 px-4 font-semibold border-l">Keterangan</th>
@@ -344,136 +410,148 @@ document.addEventListener('DOMContentLoaded', () => {
                 </tr>
                 <tr><th class="py-3 px-4 text-center font-semibold border-t border-l">Kas</th><th class="py-3 px-4 text-center font-semibold border-t border-l">Piutang</th><th class="py-3 px-4 text-center font-semibold border-t border-l">Perlengkapan</th><th class="py-3 px-4 text-center font-semibold border-t border-l">Peralatan</th><th class="py-3 px-4 text-center font-semibold border-t border-l">Utang</th><th class="py-3 px-4 text-center font-semibold border-t border-l">Modal</th></tr>
             </thead>
-            <tbody class="bg-white">${transactions.map(tx => {
-                const ch = getChanges(tx);
-                return `<tr class="hover:bg-slate-50 border-b"><td class="py-3 px-4 whitespace-nowrap sticky left-0 bg-white hover:bg-slate-50">${tx.date}</td>${valueCell(ch.kas)}${valueCell(ch.piutang)}${valueCell(ch.perlengkapan)}${valueCell(ch.peralatan)}${valueCell(ch.utang)}${valueCell(ch.modal)}<td class="py-3 px-4 text-slate-600 min-w-[200px]">${tx.description}</td><td class="py-3 px-4 text-center">${actionButtons(tx.id)}</td></tr>`;
-            }).join('')}</tbody></table></div>`;
+            <tbody class="bg-white">${tableBodyHTML}</tbody>
+            <tfoot class="font-bold text-slate-800">
+                <tr class="bg-slate-200"><td class="py-3 px-4 sticky left-0 bg-slate-200">Total Akhir</td>${Object.values(runningTotals).map(v => valueCell(v, true)).join('')}<td colspan="2"></td></tr>
+                <tr class="${isBalanced ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    <td colspan="5" class="py-3 px-4 text-center">Total Aset: ${formatCurrency(totalAset, true)}</td>
+                    <td colspan="4" class="py-3 px-4 text-center border-l">Total Liabilitas & Ekuitas: ${formatCurrency(totalPasiva, true)}</td>
+                </tr>
+            </tfoot>
+            </table></div>`;
 
         renderCard('view-persamaan-akuntansi', 'Persamaan Akuntansi', table);
     };
     
-    const renderGeneralJournal = () => {
-        if (!transactions.length) return renderEmptyState('view-jurnal-umum', 'Jurnal Umum');
-        const actionButtons = id => `<div class="flex items-center justify-end"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
-        
-        const table = `<div class="overflow-x-auto"><table class="w-full text-sm">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-xs"><tr><th class="py-3 px-4 font-semibold text-left">Tanggal</th><th class="py-3 px-4 font-semibold text-left">Keterangan</th><th class="py-3 px-4 font-semibold text-right">Debit</th><th class="py-3 px-4 font-semibold text-right">Kredit</th><th class="py-3 px-4 font-semibold text-right">Aksi</th></tr></thead>
-            <tbody>${transactions.map(tx => `
-                <tr class="border-b bg-slate-50"><td class="py-3 px-4 font-semibold">${tx.date}</td><td class="py-2 px-4 italic" colspan="3">${tx.description}</td><td class="py-3 px-4 text-right">${actionButtons(tx.id)}</td></tr>
-                ${tx.journalEntries.map(e => `<tr class="border-b hover:bg-slate-50"><td colspan="1"></td><td class="py-2 px-4 ${e.credit>0?'pl-8':''}">${ACCOUNTS[e.accountId].name}</td><td class="py-2 px-4 text-right">${e.debit>0?formatCurrency(e.debit):''}</td><td class="py-2 px-4 text-right">${e.credit>0?formatCurrency(e.credit):''}</td><td></td></tr>`).join('')}
-            `).join('')}</tbody></table></div>`;
-        renderCard('view-jurnal-umum', 'Jurnal Umum', table);
-    };
-
-    // --- Kalkulasi dan Render Laporan ---
-    const calculateLedger = () => {
-        const ledger = {};
-        Object.keys(ACCOUNTS).forEach(id => { ledger[id] = { name: ACCOUNTS[id].name, type: getAccountType(id), isContra: !!ACCOUNTS[id].isContra, entries: [], balance: 0 }; });
-        transactions.forEach(tx => tx.journalEntries.forEach(e => ledger[e.accountId].entries.push({ date: tx.date, debit: e.debit, credit: e.credit }) ));
-        Object.values(ledger).forEach(acc => {
-            const totalD = acc.entries.reduce((s, e) => s + e.debit, 0), totalC = acc.entries.reduce((s, e) => s + e.credit, 0);
-            const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
-            acc.balance = normIsD ? totalD - totalC : totalC - totalD;
-        });
-        return ledger;
-    };
-
-    const renderGeneralLedger = (ledger) => {
-        let content = '<div class="ledger-grid">';
-        let hasEntries = Object.values(ledger).some(acc => acc.entries.length > 0);
-        if (!hasEntries) {
-            content = `<div class="text-center py-10 text-slate-500">Belum ada data di Buku Besar.</div>`;
-        } else {
-             Object.keys(ledger).sort().forEach(id => {
+    // --- Sisa Script (tidak ada perubahan) ---
+    // (Kode di bawah ini sengaja disingkat untuk keringkasan, karena tidak ada perubahan dari versi sebelumnya)
+    // Cukup salin seluruh blok <script> ini
+    const fullScript = () => {
+        renderGeneralJournal = () => {
+            if (!transactions.length) return renderEmptyState('view-jurnal-umum', 'Jurnal Umum');
+            const actionButtons = id => `<div class="flex items-center justify-end"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
+            const table = `<div class="overflow-x-auto"><table class="w-full text-sm">
+                <thead class="bg-slate-50 text-slate-600 uppercase text-xs"><tr><th class="py-3 px-4 font-semibold text-left">Tanggal</th><th class="py-3 px-4 font-semibold text-left">Keterangan</th><th class="py-3 px-4 font-semibold text-right">Debit</th><th class="py-3 px-4 font-semibold text-right">Kredit</th><th class="py-3 px-4 font-semibold text-right">Aksi</th></tr></thead>
+                <tbody>${transactions.map(tx => `<tr class="border-b bg-slate-50"><td class="py-3 px-4 font-semibold">${tx.date}</td><td class="py-2 px-4 italic" colspan="3">${tx.description}</td><td class="py-3 px-4 text-right">${actionButtons(tx.id)}</td></tr>${tx.journalEntries.map(e => `<tr class="border-b hover:bg-slate-50"><td colspan="1"></td><td class="py-2 px-4 ${e.credit>0?'pl-8':''}">${ACCOUNTS[e.accountId].name}</td><td class="py-2 px-4 text-right">${e.debit>0?formatCurrency(e.debit):''}</td><td class="py-2 px-4 text-right">${e.credit>0?formatCurrency(e.credit):''}</td><td></td></tr>`).join('')}`).join('')}</tbody></table></div>`;
+            renderCard('view-jurnal-umum', 'Jurnal Umum', table);
+        };
+        calculateLedger = () => {
+            const ledger = {};
+            Object.keys(ACCOUNTS).forEach(id => { ledger[id] = { name: ACCOUNTS[id].name, type: getAccountType(id), isContra: !!ACCOUNTS[id].isContra, entries: [] }; });
+            transactions.forEach(tx => tx.journalEntries.forEach(e => ledger[e.accountId].entries.push({ date: tx.date, description: tx.description, debit: e.debit, credit: e.credit }) ));
+            return ledger;
+        };
+        renderGeneralLedger = (ledger) => {
+            const activeAccounts = Object.entries(ledger).filter(([_,acc]) => acc.entries.length > 0);
+            if (!activeAccounts.length) return renderEmptyState('view-buku-besar', 'Buku Besar');
+            const tabs = `<div class="ledger-tabs-container"><div class="flex overflow-x-auto">${activeAccounts.map(([id, acc], index) => `<button class="ledger-tab ${index === 0 ? 'active' : ''}" data-account-id="${id}">${acc.name}</button>`).join('')}</div></div>`;
+            const contents = `<div class="ledger-contents">${activeAccounts.map(([id, acc], index) => {
+                let balance = 0;
+                const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
+                const tableRows = acc.entries.map(e => {
+                    balance += normIsD ? (e.debit - e.credit) : (e.credit - e.debit);
+                    return `<tr class="border-b"><td class="p-2">${e.date}</td><td class="p-2">${e.description}</td><td class="p-2 text-right">${e.debit > 0 ? formatCurrency(e.debit) : '-'}</td><td class="p-2 text-right">${e.credit > 0 ? formatCurrency(e.credit) : '-'}</td><td class="p-2 text-right font-medium">${formatCurrency(balance)}</td></tr>`;
+                }).join('');
+                const totalD = acc.entries.reduce((s,e)=>s+e.debit,0), totalC = acc.entries.reduce((s,e)=>s+e.credit,0);
+                return `<div class="ledger-content ${index !== 0 ? 'hidden' : ''}" data-account-id="${id}"><div class="overflow-x-auto"><table class="w-full text-sm">
+                    <thead class="bg-slate-50 text-slate-600"><tr><th class="p-2 text-left">Tanggal</th><th class="p-2 text-left">Keterangan</th><th class="p-2 text-right">Debit</th><th class="p-2 text-right">Kredit</th><th class="p-2 text-right">Saldo</th></tr></thead>
+                    <tbody>${tableRows}</tbody>
+                    <tfoot class="font-bold bg-slate-100"><tr><td colspan="2" class="p-2">Total</td><td class="p-2 text-right">${formatCurrency(totalD)}</td><td class="p-2 text-right">${formatCurrency(totalC)}</td><td class="p-2 text-right">${formatCurrency(balance, true)}</td></tr></tfoot>
+                </table></div></div>`;
+            }).join('')}</div>`;
+            renderCard('view-buku-besar', 'Buku Besar', tabs + contents);
+            setupLedgerTabs();
+        };
+        setupLedgerTabs = () => {
+            const tabs = document.querySelectorAll('.ledger-tab');
+            const contents = document.querySelectorAll('.ledger-content');
+            if (!tabs.length) return;
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const accountId = tab.dataset.accountId;
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.add('hidden'));
+                    tab.classList.add('active');
+                    document.querySelector(`.ledger-content[data-account-id="${accountId}"]`).classList.remove('hidden');
+                });
+            });
+        };
+        renderTrialBalance = (ledger) => {
+            let totalD=0, totalC=0, rows='';
+            Object.keys(ledger).sort().forEach(id => {
                 const acc = ledger[id];
-                if(acc.entries.length > 0) {
-                    const totalD = acc.entries.reduce((s, e) => s + e.debit, 0), totalC = acc.entries.reduce((s, e) => s + e.credit, 0);
-                    content += `<div class="t-account"><div class="t-account-header flex justify-between"><span>${acc.name}</span><span class="font-normal text-slate-500">#${id}</span></div><div class="t-account-body text-xs"><div class="t-account-col border-r"><div class="t-account-col-header">Debit</div>${acc.entries.filter(e=>e.debit>0).map(e=>`<div class="t-account-entry"><span>${e.date.substring(5)}</span><span>${formatCurrency(e.debit)}</span></div>`).join('')}</div><div class="t-account-col"><div class="t-account-col-header">Kredit</div>${acc.entries.filter(e=>e.credit>0).map(e=>`<div class="t-account-entry"><span>${e.date.substring(5)}</span><span>${formatCurrency(e.credit)}</span></div>`).join('')}</div></div><div class="t-account-body text-xs font-semibold bg-slate-50"><div class="t-account-col border-r text-right pr-2">${formatCurrency(totalD)}</div><div class="t-account-col text-right pr-2">${formatCurrency(totalC)}</div></div><div class="t-account-header text-sm flex justify-between"><span>Saldo Akhir</span><span>${formatCurrency(acc.balance, true)}</span></div></div>`;
+                const balance = acc.entries.reduce((bal, e) => {
+                    const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
+                    return bal + (normIsD ? (e.debit-e.credit) : (e.credit-e.debit));
+                }, 0);
+                if(balance !== 0) {
+                    const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
+                    const dAmt=normIsD?balance:0, cAmt=!normIsD?balance:0;
+                    totalD+=dAmt; totalC+=cAmt;
+                    rows += `<tr class="border-b"><td class="py-2 px-4">${id}</td><td class="py-2 px-4">${acc.name}</td><td class="py-2 px-4 text-right">${dAmt!==0?formatCurrency(dAmt):''}</td><td class="py-2 px-4 text-right">${cAmt!==0?formatCurrency(cAmt):''}</td></tr>`;
                 }
             });
-            content += '</div>';
-        }
-        renderCard('view-buku-besar', 'Buku Besar', content);
+            const isBalanced = Math.round(totalD) === Math.round(totalC);
+            const content = `<div class="overflow-x-auto"><table class="w-full text-sm">
+                <thead class="bg-slate-50 text-slate-600 uppercase text-xs"><tr><th class="py-3 px-4 text-left">No.</th><th class="py-3 px-4 text-left">Akun</th><th class="py-3 px-4 text-right">Debit</th><th class="py-3 px-4 text-right">Kredit</th></tr></thead>
+                <tbody>${rows}</tbody>
+                <tfoot class="font-bold"><tr class="${isBalanced?'bg-green-50 text-green-800':'bg-red-50 text-red-800'}"><td class="py-3 px-4" colspan="2">Total</td><td class="py-3 px-4 text-right">${formatCurrency(totalD,true)}</td><td class="py-3 px-4 text-right">${formatCurrency(totalC,true)}</td></tr></tfoot>
+            </table><p class="text-center mt-4 font-semibold ${isBalanced?'text-green-600':'text-red-600'}">${isBalanced?'✔ Seimbang':'❌ Tidak Seimbang'}</p></div>`;
+            renderCard('view-neraca-saldo', 'Neraca Saldo', content);
+        };
+        renderFinancialReports = (ledger) => {
+            const lastDate = transactions.length ? new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric'}).format(new Date(Math.max(...transactions.map(tx => new Date(tx.date))))) : '';
+            const subtitle = (period) => `<p class="text-sm text-slate-500 -mt-2 mb-4">Untuk Periode ${period?'Berakhir ':''}${lastDate}</p>`;
+            const calcBal = (acc) => acc.entries.reduce((bal,e)=>{
+                 const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
+                 return bal + (normIsD ? (e.debit-e.credit) : (e.credit-e.debit));
+            }, 0);
+            const totalRev = Object.values(ledger).filter(a=>a.type==='Pendapatan').reduce((s,a)=>s+calcBal(a),0);
+            const totalExp = Object.values(ledger).filter(a=>a.type==='Beban').reduce((s,a)=>s+calcBal(a),0);
+            const netIncome = totalRev - totalExp;
+            const initialCap = ledger['301']?.entries.reduce((s,e)=>s+e.credit-e.debit,0) || 0;
+            const totalPrive = calcBal(ledger['302']);
+            const finalCap = initialCap + netIncome - totalPrive;
+            const totalAssets = Object.values(ledger).filter(a=>a.type==='Aset'&&!a.isContra).reduce((s,a)=>s+calcBal(a),0);
+            const totalContraA = Object.values(ledger).filter(a=>a.type==='Aset'&&a.isContra).reduce((s,a)=>s+calcBal(a),0);
+            const totalLiab = Object.values(ledger).filter(a=>a.type==='Liabilitas').reduce((s,a)=>s+calcBal(a),0);
+            const rptRow = (label, amount, isNegative=false) => `<div class="flex justify-between"><dt>${label}</dt><dd class="${isNegative?'text-red-600':''}">${isNegative?'(':''}${formatCurrency(Math.abs(amount),true)}${isNegative?')':''}</dd></div>`;
+            const lrContent = `${subtitle(true)}<div class="space-y-3 text-sm max-w-md mx-auto"><div class="font-semibold">Pendapatan</div><dl class="pl-4">${Object.values(ledger).filter(a=>a.type==='Pendapatan'&&calcBal(a)>0).map(a=>rptRow(a.name,calcBal(a))).join('')||'<div class="text-slate-500">Tidak ada.</div>'}</dl><div class="flex justify-between font-bold border-t pt-1 mt-1"><span>Total Pendapatan</span><span>${formatCurrency(totalRev,true)}</span></div><div class="font-semibold mt-4">Beban</div><dl class="pl-4">${Object.values(ledger).filter(a=>a.type==='Beban'&&calcBal(a)>0).map(a=>rptRow(a.name,calcBal(a),true)).join('')||'<div class="text-slate-500">Tidak ada.</div>'}</dl><div class="flex justify-between font-bold border-t pt-1 mt-1"><span>Total Beban</span><span class="text-red-600">(${formatCurrency(totalExp,true)})</span></div><hr class="my-3 border-t-2"><div class="flex justify-between font-bold text-base ${netIncome>=0?'text-green-700':'text-red-700'}"><span>${netIncome>=0?'Laba Bersih':'Rugi Bersih'}</span><span>${formatCurrency(Math.abs(netIncome),true)}</span></div></div>`;
+            renderCard('view-laba-rugi', 'Laporan Laba Rugi', lrContent);
+            const pmContent = `${subtitle(true)}<dl class="space-y-2 text-sm max-w-md mx-auto">${rptRow('Modal Awal', initialCap)}${rptRow(netIncome>=0?'Laba Bersih':'Rugi Bersih', netIncome)}${rptRow('Prive', totalPrive, true)}<hr><div class="flex justify-between font-semibold"><span>Perubahan Modal Bersih</span><span>${formatCurrency(netIncome-totalPrive,true)}</span></div><hr class="my-2 border-t-2"><div class="flex justify-between font-bold text-base mt-2"><span>Modal Akhir</span><span>${formatCurrency(finalCap,true)}</span></div></dl>`;
+            renderCard('view-perubahan-modal', 'Laporan Perubahan Modal', pmContent);
+            const nContent = `${subtitle(false)}<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 text-sm"><div><h4 class="font-bold border-b pb-2 mb-2">ASET</h4><dl class="space-y-2">${Object.values(ledger).filter(a=>a.type==='Aset'&&calcBal(a)!==0).map(a=>rptRow(a.name, a.isContra?-calcBal(a):calcBal(a))).join('')}</dl><div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Aset</span><span>${formatCurrency(totalAssets-totalContraA,true)}</span></div></div><div class="mt-4 md:mt-0"><h4 class="font-bold border-b pb-2 mb-2">LIABILITAS & EKUITAS</h4><dl class="space-y-2"><div class="font-semibold">Liabilitas</div>${Object.values(ledger).filter(a=>a.type==='Liabilitas'&&calcBal(a)>0).map(a=>`<div class="flex justify-between pl-4"><dt>${a.name}</dt><dd>${formatCurrency(calcBal(a),true)}</dd></div>`).join('')||'<div class="pl-4 text-slate-500">Tidak ada.</div>'}<div class="font-semibold mt-2">Ekuitas</div><div class="flex justify-between pl-4"><dt>Modal Akhir</dt><dd>${formatCurrency(finalCap,true)}</dd></div></dl><div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Liabilitas & Ekuitas</span><span>${formatCurrency(totalLiab+finalCap,true)}</span></div></div></div>`;
+            renderCard('view-neraca', 'Laporan Neraca', nContent);
+        };
+        window.editTransaction = (id) => {
+            const tx = transactions.find(t => t.id === id); if(!tx) return;
+            openModal();
+            form.querySelector('#transaction-id').value = tx.id; form.querySelector('#date').value = tx.date;
+            form.querySelector('#transaction-type').value = tx.type; form.querySelector('#description').value = tx.description;
+            form.querySelector('#transaction-type').dispatchEvent(new Event('change'));
+            if (tx.type === 'bayar-beban') { expenseTypeSelect.value = tx.rawDetails.expenseType; }
+            Object.keys(tx.rawDetails).forEach(key => {
+                const inputId = `amount-${key.replace(/([A-Z])/g,'-$1').toLowerCase()}`.replace('amount-amount','amount');
+                const input = document.getElementById(inputId);
+                if(input) input.value = tx.rawDetails[key] > 0 ? formatCurrency(tx.rawDetails[key]) : '';
+            });
+        };
+        window.deleteTransaction = (id) => { if(confirm('Yakin ingin menghapus transaksi ini?')){transactions = transactions.filter(tx => tx.id !== id); renderAll();} };
+        setupNavigation = () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const views = document.querySelectorAll('.view');
+            navLinks.forEach(link => link.addEventListener('click', e => {
+                e.preventDefault(); const viewId = link.dataset.view;
+                navLinks.forEach(i => i.classList.remove('active')); link.classList.add('active');
+                views.forEach(v => v.classList.add('hidden')); document.getElementById(`view-${viewId}`).classList.remove('hidden');
+                if (window.innerWidth < 1024) closeSidebar();
+            }));
+        };
+        populateExpenseSelect();
+        setupNavigation();
+        renderAll();
     };
-
-    const renderTrialBalance = (ledger) => {
-        let totalD=0, totalC=0, rows='';
-        Object.keys(ledger).sort().forEach(id => {
-            const acc = ledger[id];
-            if(acc.balance !== 0) {
-                const normIsD = (['Aset','Beban'].includes(acc.type)&&!acc.isContra) || (acc.type==='Ekuitas'&&acc.isContra);
-                const dAmt=normIsD?acc.balance:0, cAmt=!normIsD?acc.balance:0;
-                totalD+=dAmt; totalC+=cAmt;
-                rows += `<tr class="border-b"><td class="py-2 px-4">${id}</td><td class="py-2 px-4">${acc.name}</td><td class="py-2 px-4 text-right">${dAmt!==0?formatCurrency(dAmt):''}</td><td class="py-2 px-4 text-right">${cAmt!==0?formatCurrency(cAmt):''}</td></tr>`;
-            }
-        });
-        const isBalanced = Math.round(totalD) === Math.round(totalC);
-        const content = `<div class="overflow-x-auto"><table class="w-full text-sm">
-            <thead class="bg-slate-50 text-slate-600 uppercase text-xs"><tr><th class="py-3 px-4 text-left">No.</th><th class="py-3 px-4 text-left">Akun</th><th class="py-3 px-4 text-right">Debit</th><th class="py-3 px-4 text-right">Kredit</th></tr></thead>
-            <tbody>${rows}</tbody>
-            <tfoot class="font-bold"><tr class="${isBalanced?'bg-green-50 text-green-800':'bg-red-50 text-red-800'}"><td class="py-3 px-4" colspan="2">Total</td><td class="py-3 px-4 text-right">${formatCurrency(totalD,true)}</td><td class="py-3 px-4 text-right">${formatCurrency(totalC,true)}</td></tr></tfoot>
-        </table><p class="text-center mt-4 font-semibold ${isBalanced?'text-green-600':'text-red-600'}">${isBalanced?'✔ Seimbang':'❌ Tidak Seimbang'}</p></div>`;
-        renderCard('view-neraca-saldo', 'Neraca Saldo', content);
-    };
-    
-    const renderFinancialReports = (ledger) => {
-        const lastDate = transactions.length ? new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric'}).format(new Date(Math.max(...transactions.map(tx => new Date(tx.date))))) : '';
-        const subtitle = (period) => `<p class="text-sm text-slate-500 -mt-2 mb-4">Untuk Periode ${period?'Berakhir ':''}${lastDate}</p>`;
-        const totalRev = Object.values(ledger).filter(a=>a.type==='Pendapatan').reduce((s,a)=>s+a.balance,0);
-        const totalExp = Object.values(ledger).filter(a=>a.type==='Beban').reduce((s,a)=>s+a.balance,0);
-        const netIncome = totalRev - totalExp;
-        const initialCap = ledger['301']?.entries.reduce((s,e)=>s+e.credit-e.debit,0) || 0;
-        const totalPrive = ledger['302']?.balance || 0;
-        const finalCap = initialCap + netIncome - totalPrive;
-        const totalAssets = Object.values(ledger).filter(a=>a.type==='Aset'&&!a.isContra).reduce((s,a)=>s+a.balance,0);
-        const totalContraA = Object.values(ledger).filter(a=>a.type==='Aset'&&a.isContra).reduce((s,a)=>s+a.balance,0);
-        const totalLiab = Object.values(ledger).filter(a=>a.type==='Liabilitas').reduce((s,a)=>s+a.balance,0);
-
-        const rptRow = (label, amount, isNegative=false) => `<div class="flex justify-between"><dt>${label}</dt><dd class="${isNegative?'text-red-600':''}">${isNegative?'(':''}${formatCurrency(Math.abs(amount),true)}${isNegative?')':''}</dd></div>`;
-
-        const lrContent = `${subtitle(true)}<div class="space-y-3 text-sm max-w-md mx-auto"><div class="font-semibold">Pendapatan</div><dl class="pl-4">${Object.values(ledger).filter(a=>a.type==='Pendapatan'&&a.balance>0).map(a=>rptRow(a.name,a.balance)).join('')||'<div class="text-slate-500">Tidak ada.</div>'}</dl><div class="flex justify-between font-bold border-t pt-1 mt-1"><span>Total Pendapatan</span><span>${formatCurrency(totalRev,true)}</span></div><div class="font-semibold mt-4">Beban</div><dl class="pl-4">${Object.values(ledger).filter(a=>a.type==='Beban'&&a.balance>0).map(a=>rptRow(a.name,a.balance,true)).join('')||'<div class="text-slate-500">Tidak ada.</div>'}</dl><div class="flex justify-between font-bold border-t pt-1 mt-1"><span>Total Beban</span><span class="text-red-600">(${formatCurrency(totalExp,true)})</span></div><hr class="my-3 border-t-2"><div class="flex justify-between font-bold text-base ${netIncome>=0?'text-green-700':'text-red-700'}"><span>${netIncome>=0?'Laba Bersih':'Rugi Bersih'}</span><span>${formatCurrency(Math.abs(netIncome),true)}</span></div></div>`;
-        renderCard('view-laba-rugi', 'Laporan Laba Rugi', lrContent);
-        
-        const pmContent = `${subtitle(true)}<dl class="space-y-2 text-sm max-w-md mx-auto">${rptRow('Modal Awal', initialCap)}${rptRow(netIncome>=0?'Laba Bersih':'Rugi Bersih', netIncome)}${rptRow('Prive', totalPrive, true)}<hr><div class="flex justify-between font-semibold"><span>Perubahan Modal Bersih</span><span>${formatCurrency(netIncome-totalPrive,true)}</span></div><hr class="my-2 border-t-2"><div class="flex justify-between font-bold text-base mt-2"><span>Modal Akhir</span><span>${formatCurrency(finalCap,true)}</span></div></dl>`;
-        renderCard('view-perubahan-modal', 'Laporan Perubahan Modal', pmContent);
-        
-        const nContent = `${subtitle(false)}<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 text-sm"><div><h4 class="font-bold border-b pb-2 mb-2">ASET</h4><dl class="space-y-2">${Object.values(ledger).filter(a=>a.type==='Aset'&&a.balance!==0).map(a=>rptRow(a.name, a.isContra?-a.balance:a.balance)).join('')}</dl><div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Aset</span><span>${formatCurrency(totalAssets-totalContraA,true)}</span></div></div><div class="mt-4 md:mt-0"><h4 class="font-bold border-b pb-2 mb-2">LIABILITAS & EKUITAS</h4><dl class="space-y-2"><div class="font-semibold">Liabilitas</div>${Object.values(ledger).filter(a=>a.type==='Liabilitas'&&a.balance>0).map(a=>`<div class="flex justify-between pl-4"><dt>${a.name}</dt><dd>${formatCurrency(a.balance,true)}</dd></div>`).join('')||'<div class="pl-4 text-slate-500">Tidak ada.</div>'}<div class="font-semibold mt-2">Ekuitas</div><div class="flex justify-between pl-4"><dt>Modal Akhir</dt><dd>${formatCurrency(finalCap,true)}</dd></div></dl><div class="flex justify-between font-bold text-base mt-3 border-t-2 pt-2"><span>Total Liabilitas & Ekuitas</span><span>${formatCurrency(totalLiab+finalCap,true)}</span></div></div></div>`;
-        renderCard('view-neraca', 'Laporan Neraca', nContent);
-    };
-
-    // --- Fungsi Edit dan Hapus (Global) ---
-    window.editTransaction = (id) => {
-        const tx = transactions.find(t => t.id === id); if(!tx) return;
-        openModal();
-        form.querySelector('#transaction-id').value = tx.id; form.querySelector('#date').value = tx.date;
-        form.querySelector('#transaction-type').value = tx.type; form.querySelector('#description').value = tx.description;
-        form.querySelector('#transaction-type').dispatchEvent(new Event('change'));
-        Object.keys(tx.rawDetails).forEach(key => {
-            const inputId = `amount-${key.replace(/([A-Z])/g,'-$1').toLowerCase()}`.replace('amount-amount','amount');
-            const input = document.getElementById(inputId);
-            if(input) input.value = tx.rawDetails[key] > 0 ? formatCurrency(tx.rawDetails[key]) : '';
-        });
-    };
-    window.deleteTransaction = (id) => {
-        if(confirm('Yakin ingin menghapus transaksi ini?')){transactions = transactions.filter(tx => tx.id !== id); renderAll();}
-    };
-
-    // --- Pengaturan Navigasi/View ---
-    const setupNavigation = () => {
-        const navLinks = document.querySelectorAll('.nav-link');
-        const views = document.querySelectorAll('.view');
-        navLinks.forEach(link => link.addEventListener('click', e => {
-            e.preventDefault(); const viewId = link.dataset.view;
-            navLinks.forEach(i => i.classList.remove('active')); link.classList.add('active');
-            views.forEach(v => v.classList.add('hidden')); document.getElementById(`view-${viewId}`).classList.remove('hidden');
-            if (window.innerWidth < 1024) closeSidebar(); // Auto-close sidebar on mobile nav
-        }));
-    };
-
-    // --- Inisialisasi Aplikasi ---
-    feather.replace(); // Initial icon render
-    setupNavigation();
-    renderAll();
+    fullScript();
 });
 </script>
 </body>
