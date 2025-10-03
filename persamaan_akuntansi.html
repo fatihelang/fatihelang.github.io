@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dasbor Akuntansi Profesional</title>
+    <title>Dasbor Akuntansi - Tampilan Lengkap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarOverlay = document.getElementById('sidebar-overlay');
 
     // --- Penyimpanan Data ---
-    let transactions = JSON.parse(localStorage.getItem('accounting_transactions_v8')) || [];
+    let transactions = JSON.parse(localStorage.getItem('accounting_transactions_v9')) || [];
 
     // --- Fungsi Utilitas ---
     const parseCurrency = (v) => parseFloat(String(v).replace(/\./g, '')) || 0;
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGeneralLedger(ledger);
         renderTrialBalance(ledger);
         renderFinancialReports(ledger);
-        localStorage.setItem('accounting_transactions_v8', JSON.stringify(transactions));
+        localStorage.setItem('accounting_transactions_v9', JSON.stringify(transactions));
         feather.replace(); // Re-initialize icons after rendering
     };
     
@@ -313,9 +313,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(viewId).innerHTML = `<div class="card"><div class="p-4 md:p-5 border-b border-slate-200"><h2 class="text-lg md:text-xl font-bold text-slate-800">${title}</h2></div><div class="p-4 md:p-5">${content}</div></div>`;
     };
 
-    // --- Render Tabel Responsif (Persamaan Akuntansi & Jurnal) ---
+    const renderEmptyState = (viewId, title) => {
+        renderCard(viewId, title, `<div class="text-center py-10 text-slate-500">Belum ada transaksi.</div>`);
+    };
+
+    // --- Render Tabel dengan Horizontal Scroll ---
     const renderEquationTable = () => {
-        if (!transactions.length) return renderCard('view-persamaan-akuntansi', 'Persamaan Akuntansi', `<div class="text-center py-10 text-slate-500">Belum ada transaksi.</div>`);
+        if (!transactions.length) return renderEmptyState('view-persamaan-akuntansi', 'Persamaan Akuntansi');
         
         const getChanges = tx => {
             let ch = { kas: 0, piutang: 0, perlengkapan: 0, peralatan: 0, utang: 0, modal: 0 };
@@ -326,19 +330,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             return ch;
         };
-        const actionButtons = id => `<div class="flex-shrink-0"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
-        const valueCell = v => `<td class="py-3 px-4 text-right ${v > 0 ? 'text-green-600' : v < 0 ? 'text-red-600' : ''}">${v !== 0 ? formatCurrency(v) : ''}</td>`;
+        const actionButtons = id => `<div class="flex items-center justify-center"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
+        const valueCell = v => `<td class="py-3 px-4 text-right whitespace-nowrap ${v > 0 ? 'text-green-600' : v < 0 ? 'text-red-600' : ''}">${v !== 0 ? formatCurrency(v) : '-'}</td>`;
 
-        const mobileView = `<div class="space-y-4 lg:hidden">${transactions.map(tx => {
-            const ch = getChanges(tx);
-            const items = Object.entries(ch).filter(([_,v])=>v!==0).map(([k,v])=>`<div class="flex justify-between text-sm"><span class="text-slate-600 capitalize">${k}</span><span class="${v>0?'text-green-600':'text-red-600'}">${formatCurrency(v)}</span></div>`).join('');
-            return `<div class="border border-slate-200 rounded-lg p-3"><div class="flex justify-between items-start mb-2"><div class="pr-2"><p class="font-semibold">${tx.description}</p><span class="text-xs text-slate-500">${tx.date}</span></div>${actionButtons(tx.id)}</div><div class="border-t pt-2 mt-2">${items}</div></div>`;
-        }).join('')}</div>`;
-        
-        const desktopView = `<div class="overflow-x-auto hidden lg:block"><table class="w-full min-w-[800px] text-sm">
+        const table = `<div class="overflow-x-auto"><table class="w-full min-w-[950px] text-sm">
             <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
                 <tr>
-                    <th rowspan="2" class="py-3 px-4 font-semibold">Tanggal</th>
+                    <th rowspan="2" class="py-3 px-4 font-semibold sticky left-0 bg-slate-50">Tanggal</th>
                     <th colspan="4" class="py-3 px-4 text-center font-semibold border-l">Aset</th>
                     <th colspan="2" class="py-3 px-4 text-center font-semibold border-l">Liabilitas & Ekuitas</th>
                     <th rowspan="2" class="py-3 px-4 font-semibold border-l">Keterangan</th>
@@ -348,29 +346,23 @@ document.addEventListener('DOMContentLoaded', () => {
             </thead>
             <tbody class="bg-white">${transactions.map(tx => {
                 const ch = getChanges(tx);
-                return `<tr class="hover:bg-slate-50 border-b"><td class="py-3 px-4">${tx.date}</td>${valueCell(ch.kas)}${valueCell(ch.piutang)}${valueCell(ch.perlengkapan)}${valueCell(ch.peralatan)}${valueCell(ch.utang)}${valueCell(ch.modal)}<td class="py-3 px-4 text-slate-600">${tx.description}</td><td class="py-3 px-4 text-center">${actionButtons(tx.id)}</td></tr>`;
+                return `<tr class="hover:bg-slate-50 border-b"><td class="py-3 px-4 whitespace-nowrap sticky left-0 bg-white hover:bg-slate-50">${tx.date}</td>${valueCell(ch.kas)}${valueCell(ch.piutang)}${valueCell(ch.perlengkapan)}${valueCell(ch.peralatan)}${valueCell(ch.utang)}${valueCell(ch.modal)}<td class="py-3 px-4 text-slate-600 min-w-[200px]">${tx.description}</td><td class="py-3 px-4 text-center">${actionButtons(tx.id)}</td></tr>`;
             }).join('')}</tbody></table></div>`;
 
-        renderCard('view-persamaan-akuntansi', 'Persamaan Akuntansi', mobileView + desktopView);
+        renderCard('view-persamaan-akuntansi', 'Persamaan Akuntansi', table);
     };
     
     const renderGeneralJournal = () => {
-        if (!transactions.length) return renderCard('view-jurnal-umum', 'Jurnal Umum', `<div class="text-center py-10 text-slate-500">Belum ada transaksi.</div>`);
-        const actionButtons = id => `<div class="flex-shrink-0"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
-
-        const mobileView = `<div class="space-y-4 lg:hidden">${transactions.map(tx => {
-            const entries = tx.journalEntries.map(e => `<div class="flex justify-between text-sm ${e.credit > 0 ? 'pl-4' : ''}"><span class="text-slate-600">${ACCOUNTS[e.accountId].name}</span><span>${e.debit > 0 ? formatCurrency(e.debit) : `(${formatCurrency(e.credit)})`}</span></div>`).join('');
-            return `<div class="border border-slate-200 rounded-lg p-3"><div class="flex justify-between items-start mb-2"><div class="pr-2"><p class="font-semibold">${tx.description}</p><span class="text-xs text-slate-500">${tx.date}</span></div>${actionButtons(tx.id)}</div><div class="border-t pt-2 mt-2">${entries}</div></div>`;
-        }).join('')}</div>`;
-
-        const desktopView = `<div class="overflow-x-auto hidden lg:block"><table class="w-full text-sm">
+        if (!transactions.length) return renderEmptyState('view-jurnal-umum', 'Jurnal Umum');
+        const actionButtons = id => `<div class="flex items-center justify-end"><button onclick="editTransaction('${id}')" title="Edit" class="text-slate-500 hover:text-indigo-600 p-1 rounded-full transition-colors"><i data-feather="edit-2" class="w-4 h-4"></i></button><button onclick="deleteTransaction('${id}')" title="Hapus" class="text-slate-500 hover:text-red-600 p-1 rounded-full transition-colors"><i data-feather="trash-2" class="w-4 h-4"></i></button></div>`;
+        
+        const table = `<div class="overflow-x-auto"><table class="w-full text-sm">
             <thead class="bg-slate-50 text-slate-600 uppercase text-xs"><tr><th class="py-3 px-4 font-semibold text-left">Tanggal</th><th class="py-3 px-4 font-semibold text-left">Keterangan</th><th class="py-3 px-4 font-semibold text-right">Debit</th><th class="py-3 px-4 font-semibold text-right">Kredit</th><th class="py-3 px-4 font-semibold text-right">Aksi</th></tr></thead>
             <tbody>${transactions.map(tx => `
                 <tr class="border-b bg-slate-50"><td class="py-3 px-4 font-semibold">${tx.date}</td><td class="py-2 px-4 italic" colspan="3">${tx.description}</td><td class="py-3 px-4 text-right">${actionButtons(tx.id)}</td></tr>
                 ${tx.journalEntries.map(e => `<tr class="border-b hover:bg-slate-50"><td colspan="1"></td><td class="py-2 px-4 ${e.credit>0?'pl-8':''}">${ACCOUNTS[e.accountId].name}</td><td class="py-2 px-4 text-right">${e.debit>0?formatCurrency(e.debit):''}</td><td class="py-2 px-4 text-right">${e.credit>0?formatCurrency(e.credit):''}</td><td></td></tr>`).join('')}
             `).join('')}</tbody></table></div>`;
-
-        renderCard('view-jurnal-umum', 'Jurnal Umum', mobileView + desktopView);
+        renderCard('view-jurnal-umum', 'Jurnal Umum', table);
     };
 
     // --- Kalkulasi dan Render Laporan ---
@@ -389,8 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderGeneralLedger = (ledger) => {
         let content = '<div class="ledger-grid">';
         let hasEntries = Object.values(ledger).some(acc => acc.entries.length > 0);
-        if (!hasEntries) content = `<div class="text-center py-10 text-slate-500">Belum ada data di Buku Besar.</div>`;
-        else {
+        if (!hasEntries) {
+            content = `<div class="text-center py-10 text-slate-500">Belum ada data di Buku Besar.</div>`;
+        } else {
              Object.keys(ledger).sort().forEach(id => {
                 const acc = ledger[id];
                 if(acc.entries.length > 0) {
@@ -478,6 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Inisialisasi Aplikasi ---
+    feather.replace(); // Initial icon render
     setupNavigation();
     renderAll();
 });
