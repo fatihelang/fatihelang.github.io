@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untukmu, Semangat Ya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Versi SVG (direkomendasikan browser modern) -->
+<link rel="icon" type="image/svg+xml" href="assets/bird.svg">
+
+<!-- (Opsional) fallback untuk browser lama -->
+<link rel="alternate icon" type="image/png" href="assets/bird.svg">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #1e293b;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #cbd5e1;
+            --transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Comfortaa', cursive;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            transition: background 1.5s ease;
+            overflow-x: hidden;
+        }
+
+        .section {
+            width: 100%;
+            max-width: 420px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Mood Grid */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .mood-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .mood-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        #mood-response {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            min-height: 1.2rem;
+            color: var(--accent);
+            line-height: 1.6;
+        }
+
+        /* Breathing Circle */
+        .circle-wrap {
+            width: 120px; height: 120px;
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 1rem auto;
+        }
+
+        .circle {
+            width: 50px; height: 50px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transition: transform 4s linear;
+        }
+
+        #breathe-text { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* Timer */
+        .timer-display {
+            font-size: 3rem; font-weight: 700;
+            margin-bottom: 1.2rem; letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-controls { display: flex; gap: 10px; justify-content: center; }
+
+        .timer-btn {
+            background: none;
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .timer-btn.active { background: #f8fafc; color: #0f172a; border: none; font-weight: 700; }
+
+        /* Generator Pesan */
+        .gen-btn {
+            background: var(--text-primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 16px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-family: inherit;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        #message-display { 
+            margin-top: 1.8rem; 
+            font-size: 1rem; 
+            line-height: 1.7; 
+            color: #e2e8f0;
+            padding: 0 5px;
+        }
+
+        .hidden-moon {
+            position: fixed; bottom: 20px; right: 20px;
+            font-size: 1.2rem; opacity: 0.2; cursor: pointer;
+            transition: 0.3s;
+        }
+        .hidden-moon:hover { opacity: 0.8; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <header style="text-align: center; margin-bottom: 2.5rem; margin-top: 1rem;">
+        <h1 style="font-size: 1.2rem; letter-spacing: 5px; font-weight: 300;">SANCTUARY</h1>
+        <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;">Teruntuk Alya yang Berjuang</p>
+    </header>
+
+    <section class="section">
+        <h2>Gimana harimu hari ini?</h2>
+        <div class="mood-grid">
+            <button class="mood-btn" onclick="checkMood('lelah', '#1e293b')">Lelah</button>
+            <button class="mood-btn" onclick="checkMood('cemas', '#451a03')">Cemas</button>
+            <button class="mood-btn" onclick="checkMood('sendu', '#2d1b2d')">Sedih</button>
+            <button class="mood-btn" onclick="checkMood('oke', '#164e63')">Baik</button>
+            <button class="mood-btn" onclick="checkMood('tenang', '#064e3b')">Tenang</button>
+            <button class="mood-btn" onclick="checkMood('maaf', '#000')">Kamu ganggu tih!</button>
+        </div>
+        <p id="mood-response"></p>
+    </section>
+
+    <section class="section">
+        <div class="circle-wrap">
+            <div class="circle" id="breath-circle"></div>
+        </div>
+        <p id="breathe-text">Butuh jeda dari tumpukan soal?</p>
+        <button onclick="startBreathing()" id="breath-btn" style="margin-top:12px; background:none; border:none; color:var(--text-secondary); cursor:pointer; text-decoration:underline; font-family: inherit;">Nafas dulu ya</button>
+    </section>
+
+    <section class="section">
+        <h2>Fokus UTBK</h2>
+        <div class="timer-display" id="timer">25:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn active" id="start-btn" onclick="startTimer()">Mulai</button>
+            <button class="timer-btn" id="pause-btn" onclick="pauseTimer()">Jeda</button>
+            <button class="timer-btn" onclick="resetTimer()">Ulang</button>
+        </div>
+    </section>
+
+    <section class="section">
+        <button class="gen-btn" onclick="generateMessage()">Klik kalau butuh semangat ✨</button>
+        <div id="message-display">"Klik tombol di atas untuk melihat pesan."</div>
+    </section>
+
+    <div class="hidden-moon" onclick="alert('Hai... Aku cuma mau bilang kalau aku bangga banget punya kamu yang sekuat ini. UTBK memang melelahkan, tapi kamu tidak sendirian menghadapinya. Semangat ya, Alya. I am always here.')">Anu</div>
+
+    <script>
+        // Sound Generator (Ding Lembut)
+        function playNotificationSound() {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, context.currentTime); // Nada A5
+            oscillator.frequency.exponentialRampToValueAtTime(440, context.currentTime + 0.5);
+
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.2, context.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.5);
+        }
+
+        // Mood Logic
+        function checkMood(mood, color) {
+            const res = document.getElementById('mood-response');
+            document.body.style.background = color;
+            const msg = {
+                lelah: "Badanmu capek ya? Gapapa, istirahat dulu. Tidur lebih awal nggak akan bikin impianmu hilang kok.",
+                cemas: "Skor tryout bukan segalanya. Kamu punya waktu untuk belajar, dan kamu punya aku yang selalu percaya kamu bisa.",
+                sendu: "I'm here. Kalau dunia terasa terlalu berat, ingat ya kalau kamu sudah berjuang sejauh ini.",
+                oke: "Senangnya! Simpan energi positif ini buat lanjutin materi besok ya.",
+                tenang: "Ketenangan adalah kunci. Kamu pasti bisa mengerjakan soal-soal itu dengan kepala dingin.",
+                maaf: "Maaf."
+            };
+            res.style.opacity = 0;
+            setTimeout(() => { res.innerText = msg[mood]; res.style.opacity = 1; }, 300);
+        }
+
+        // Breathing Logic
+        let isBreathing = false;
+        function startBreathing() {
+            if (isBreathing) return;
+            isBreathing = true;
+            const circle = document.getElementById('breath-circle');
+            const text = document.getElementById('breathe-text');
+            const btn = document.getElementById('breath-btn');
+            btn.style.visibility = 'hidden';
+
+            const cycle = () => {
+                text.innerText = "Tarik napas..."; circle.style.transform = "scale(2.8)";
+                setTimeout(() => {
+                    text.innerText = "Tahan...";
+                    setTimeout(() => {
+                        text.innerText = "Lepaskan..."; circle.style.transform = "scale(1)";
+                        setTimeout(() => {
+                            text.innerText = "Kamu sudah jauh lebih tenang.";
+                            isBreathing = false; btn.style.visibility = 'visible'; btn.innerText = "Lagi?";
+                        }, 4000);
+                    }, 4000);
+                }, 4000);
+            };
+            cycle();
+        }
+
+        // Timer Logic
+        let timer;
+        let timeLeft = 1500;
+        let running = false;
+
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function startTimer() {
+            if (running) return;
+            running = true;
+            document.getElementById('start-btn').classList.add('active');
+            document.getElementById('pause-btn').classList.remove('active');
+            timer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay();
+                } else {
+                    clearInterval(timer);
+                    playNotificationSound(); // Memanggil suara
+                    alert("Waktunya istirahat! Kamu hebat sudah fokus selama ini, Alya.");
+                    running = false;
+                    document.getElementById('start-btn').classList.remove('active');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            running = false;
+            clearInterval(timer);
+            document.getElementById('pause-btn').classList.add('active');
+            document.getElementById('start-btn').classList.remove('active');
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timeLeft = 1500;
+            updateDisplay();
+            document.getElementById('pause-btn').classList.remove('active');
+            document.getElementById('start-btn').classList.add('active');
+        }
+
+        // High Quality Quotes for Alya
+        const quotes = [
+            "Lelahmu hari ini adalah bekal untuk senyumanmu saat melihat pengumuman nanti. Semangat ya, Alya!",
+            "Puasa + Belajar UTBK itu berat, tapi kamu melakukannya dengan keren banget!",
+            "Soal UTBK memang menantang, tapi daya juangmu jauh lebih kuat dari itu.",
+            "Sayangi dirimu juga ya. Belajar secukupnya, istirahat yang cukup. Aku bangga sama kamu.",
+            "Kamu itu sudah berproses, berusaha, dan punya keberanian yang luar biasa.",
+            "Bayangkan namamu ada di daftar 'Lulus'. Kita rayakan bareng nanti ya?",
+            "Satu materi lagi, satu soal lagi. Pelan-pelan saja, yang penting tidak berhenti.",
+            "Hari-hari melelahkan ini akan jadi cerita hebat saat kamu di kampus impian nanti.",
+            "Jangan lupa sahur yang cukup biar fokusnya terjaga. Semangat terus ya!",
+            "Dunia mungkin menuntut banyak darimu, tapi di sini, kamu cukup jadi dirimu yang sedang berusaha.",
+            "Asli al, avocadonya besar bet (udah bingung nulis apaan)"
+        ];
+
+        function generateMessage() {
+            const d = document.getElementById('message-display');
+            d.style.opacity = 0;
+            setTimeout(() => {
+                d.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+                d.style.opacity = 1;
+            }, 300);
+        }
+
+        // Anti-Inspect
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
+        }
+    </script>
+</body>
+</html>
