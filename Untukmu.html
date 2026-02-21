@@ -28,16 +28,19 @@
       }
 
       body {
-        font-family: "Comfortaa", cursive;
-        background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
-        color: var(--text-primary);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem 1.5rem;
-        transition: background 1.5s ease;
-      }
+    font-family: 'Comfortaa', cursive;
+    /* Tambahkan background-color solid sebagai base */
+    background-color: var(--bg-dark); 
+    /* Gunakan background-image untuk gradasi agar tidak bentrok dengan background-color */
+    background-image: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 2rem 1.5rem; 
+    /* Transisi khusus untuk background-color saja agar smooth */
+    transition: background-color 1.5s ease-in-out; 
+}
 
       .section {
         width: 100%;
@@ -322,12 +325,23 @@
       };
 
       function checkM(m, c) {
-        const r = document.getElementById("mood-res");
-        document.body.style.background = c;
-        const randomMsg =
-          moodData[m][Math.floor(Math.random() * moodData[m].length)];
+    const r = document.getElementById('mood-res');
+    
+    // Set background-image ke none supaya background-color barunya terlihat
+    // Tapi kita lakukan dengan transisi halus
+    document.body.style.backgroundImage = "none";
+    document.body.style.backgroundColor = c;
+    
+    const randomMsg = moodData[m][Math.floor(Math.random() * moodData[m].length)];
+    
+    // Kasih efek teksnya muncul pelan juga biar gak kaget
+    r.style.opacity = 0;
+    setTimeout(() => {
         r.innerText = randomMsg;
-      }
+        r.style.opacity = 1;
+        r.style.transition = "opacity 0.5s";
+    }, 300);
+}
 
       // --- Timer Logic ---
       let t,
