@@ -28,19 +28,25 @@
       }
 
       body {
-    font-family: 'Comfortaa', cursive;
-    /* Tambahkan background-color solid sebagai base */
-    background-color: var(--bg-dark); 
-    /* Gunakan background-image untuk gradasi agar tidak bentrok dengan background-color */
-    background-image: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
-    background-attachment: fixed;
-    color: var(--text-primary);
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 2rem 1.5rem; 
-    /* Transisi khusus untuk background-color saja agar smooth */
-    transition: background-color 1.5s ease-in-out; 
-}
+        font-family: "Comfortaa", cursive;
+        /* Tambahkan background-color solid sebagai base */
+        background-color: var(--bg-dark);
+        /* Gunakan background-image untuk gradasi agar tidak bentrok dengan background-color */
+        background-image: linear-gradient(
+          135deg,
+          var(--bg-dark),
+          var(--bg-light)
+        );
+        background-attachment: fixed;
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1.5rem;
+        /* Transisi khusus untuk background-color saja agar smooth */
+        transition: background-color 1.5s ease-in-out;
+      }
 
       .section {
         width: 100%;
@@ -162,10 +168,10 @@
     </style>
   </head>
   <!-- Versi SVG (direkomendasikan browser modern) -->
-<link rel="icon" type="image/svg+xml" href="assets/bird.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/bird.svg" />
 
-<!-- (Opsional) fallback untuk browser lama -->
-<link rel="alternate icon" type="image/png" href="assets/bird.svg">
+  <!-- (Opsional) fallback untuk browser lama -->
+  <link rel="alternate icon" type="image/png" href="assets/bird.svg" />
   <body oncontextmenu="return false;">
     <header style="text-align: center; margin-bottom: 2rem">
       <h1 style="font-size: 1.1rem; letter-spacing: 5px">SANCTUARY</h1>
@@ -245,18 +251,34 @@
     </section>
 
     <section class="section">
-      <button class="gen-btn" onclick="getMsg()">Pesan Buat Alya ✨</button>
       <p
         id="msg-res"
-        style="margin-top: 1.5rem; font-size: 0.9rem; line-height: 1.6"
+        style="margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.6"
       ></p>
+      <button class="gen-btn" onclick="getMsg()">Pesan Buat Alya ✨</button>
     </section>
 
-    <div class="hidden-moon" 
-     onclick="showModal('Pesan dari Fatih ', 'Semangat terus ya Alya! Aku selalu support kamu di sini. Kamu nggak sendirian berjuang buat PTN, ada aku yang selalu percaya kamu bisa!', 'message')"
-     style="position: fixed; bottom: 20px; right: 20px; opacity: 0.3; cursor: pointer; font-size: 0.7rem; color: var(--text-secondary);">
-    Fatih disini
-</div>
+    <div
+      class="hidden-moon"
+      onclick="
+        showModal(
+          'Pesan dari Fatih ',
+          'Semangat terus ya Alya! Aku selalu support kamu di sini. Kamu nggak sendirian berjuang buat PTN, ada aku yang selalu percaya kamu bisa!',
+          'message',
+        )
+      "
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        opacity: 0.3;
+        cursor: pointer;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+      "
+    >
+      Fatih disini
+    </div>
 
     <script>
       // --- DATA 10 KALIMAT PER EMOSI ---
@@ -325,23 +347,24 @@
       };
 
       function checkM(m, c) {
-    const r = document.getElementById('mood-res');
-    
-    // Set background-image ke none supaya background-color barunya terlihat
-    // Tapi kita lakukan dengan transisi halus
-    document.body.style.backgroundImage = "none";
-    document.body.style.backgroundColor = c;
-    
-    const randomMsg = moodData[m][Math.floor(Math.random() * moodData[m].length)];
-    
-    // Kasih efek teksnya muncul pelan juga biar gak kaget
-    r.style.opacity = 0;
-    setTimeout(() => {
-        r.innerText = randomMsg;
-        r.style.opacity = 1;
-        r.style.transition = "opacity 0.5s";
-    }, 300);
-}
+        const r = document.getElementById("mood-res");
+
+        // Set background-image ke none supaya background-color barunya terlihat
+        // Tapi kita lakukan dengan transisi halus
+        document.body.style.backgroundImage = "none";
+        document.body.style.backgroundColor = c;
+
+        const randomMsg =
+          moodData[m][Math.floor(Math.random() * moodData[m].length)];
+
+        // Kasih efek teksnya muncul pelan juga biar gak kaget
+        r.style.opacity = 0;
+        setTimeout(() => {
+          r.innerText = randomMsg;
+          r.style.opacity = 1;
+          r.style.transition = "opacity 0.5s";
+        }, 300);
+      }
 
       // --- Timer Logic ---
       let t,
@@ -358,7 +381,7 @@
         run = true;
         document.getElementById("sBtn").classList.add("active");
         document.getElementById("pBtn").classList.remove("active");
-        
+
         t = setInterval(() => {
           if (tl > 0) {
             tl--;
@@ -369,45 +392,52 @@
             document.getElementById("sBtn").classList.remove("active");
 
             // Putar Suara
-            new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+            new Audio(
+              "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3",
+            ).play();
 
             // Munculkan Modal Custom sebagai ganti alert/confirm
             showModal(
-                "Hebat banget, Al! ✨", 
-                "Satu sesi fokus sudah selesai. Sekarang kamu mau istirahat 5 menit dulu atau mau langsung lanjut fokus lagi?"
+              "Hebat banget, Al! ✨",
+              "Satu sesi fokus sudah selesai. Sekarang kamu mau istirahat 5 menit dulu atau mau langsung lanjut fokus lagi?",
             );
           }
         }, 1000);
       }
 
-      function showModal(title, msg, type = 'choice') {
-        const modal = document.getElementById('custom-modal');
-        const okBtn = document.getElementById('modal-ok-btn');
-        const cancelBtn = document.getElementById('modal-cancel-btn');
-        
-        document.getElementById('modal-title').innerText = title;
-        document.getElementById('modal-message').innerText = msg;
-        modal.style.display = 'flex';
+      function showModal(title, msg, type = "choice") {
+        const modal = document.getElementById("custom-modal");
+        const okBtn = document.getElementById("modal-ok-btn");
+        const cancelBtn = document.getElementById("modal-cancel-btn");
 
-        if (type === 'message') {
-            // Mode Pesan Rahasia Fatih (Satu Tombol)
-            okBtn.innerText = "Y";
-            cancelBtn.style.display = 'none'; // Sembunyikan tombol kedua
-            okBtn.onclick = function() { modal.style.display = 'none'; };
+        document.getElementById("modal-title").innerText = title;
+        document.getElementById("modal-message").innerText = msg;
+        modal.style.display = "flex";
+
+        if (type === "message") {
+          // Mode Pesan Rahasia Fatih (Satu Tombol)
+          okBtn.innerText = "Y";
+          cancelBtn.style.display = "none"; // Sembunyikan tombol kedua
+          okBtn.onclick = function () {
+            modal.style.display = "none";
+          };
         } else {
-            // Mode Timer (Dua Tombol)
-            okBtn.innerText = "Istirahat 5 Menit";
-            cancelBtn.innerText = "Lanjut Belajar";
-            cancelBtn.style.display = 'block'; // Munculkan kembali tombol kedua
-            
-            okBtn.onclick = function() {
-                modal.style.display = 'none';
-                tl = 300; updD(); startT();
-            };
-            cancelBtn.onclick = function() {
-                modal.style.display = 'none';
-                tl = 1500; updD();
-            };
+          // Mode Timer (Dua Tombol)
+          okBtn.innerText = "Istirahat 5 Menit";
+          cancelBtn.innerText = "Lanjut Belajar";
+          cancelBtn.style.display = "block"; // Munculkan kembali tombol kedua
+
+          okBtn.onclick = function () {
+            modal.style.display = "none";
+            tl = 300;
+            updD();
+            startT();
+          };
+          cancelBtn.onclick = function () {
+            modal.style.display = "none";
+            tl = 1500;
+            updD();
+          };
         }
       }
       function pauseT() {
@@ -526,7 +556,7 @@
         "Fokus Al, soalnya nggak seberapa.",
         "Aku dukung kamu sampe lulus!",
         "Semangat Alya, calon maba hebat!",
-        "I love u Al wkwkwkwk"
+        "I love u Al wkwkwkwk",
       ];
 
       async function getKucing() {
@@ -591,17 +621,57 @@
           `"${qs[Math.floor(Math.random() * qs.length)]}"`;
       }
     </script>
-    <div id="custom-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    <div class="section" style="margin-bottom: 0; transform: scale(0.9); transition: 0.3s;">
-        <h2 id="modal-title" style="color: var(--text-primary); font-size: 1.2rem;">Sesi Selesai!</h2>
-        <p id="modal-message" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;"></p>
-        <div style="display: flex; gap: 10px;">
-            <button id="modal-ok-btn" class="gen-btn" style="flex: 1;">Istirahat 5 Menit</button>
-            <button id="modal-cancel-btn" class="gen-btn" style="flex: 1; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--glass-border);">Lanjut Belajar</button>
+    <div
+      id="custom-modal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      "
+    >
+      <div
+        class="section"
+        style="margin-bottom: 0; transform: scale(0.9); transition: 0.3s"
+      >
+        <h2
+          id="modal-title"
+          style="color: var(--text-primary); font-size: 1.2rem"
+        >
+          Sesi Selesai!
+        </h2>
+        <p
+          id="modal-message"
+          style="
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+          "
+        ></p>
+        <div style="display: flex; gap: 10px">
+          <button id="modal-ok-btn" class="gen-btn" style="flex: 1">
+            Istirahat 5 Menit
+          </button>
+          <button
+            id="modal-cancel-btn"
+            class="gen-btn"
+            style="
+              flex: 1;
+              background: rgba(255, 255, 255, 0.1);
+              color: white;
+              border: 1px solid var(--glass-border);
+            "
+          >
+            Lanjut Belajar
+          </button>
         </div>
+      </div>
     </div>
-</div>
   </body>
 </html>
-
-
