@@ -620,6 +620,43 @@
         document.getElementById("msg-res").innerText =
           `"${qs[Math.floor(Math.random() * qs.length)]}"`;
       }
+
+      (function() {
+    const textElement = document.getElementById('preload-text');
+    
+    // Daftar kalimat sambutan random dari Fatih buat Alya
+    const sambutanAl = [
+        "makasih udah buka webnya al :)",
+        "semangat terus ya belajarnya, al!",
+        "istirahat sebentar yuk, aku temenin disini :)",
+        "jangan lupa minum ya al, biar fokus!",
+        "hai al! siap buat sikat soal UTBK hari ini?",
+        "bangga banget liat kamu konsisten belajar, al.",
+        "pelan-pelan aja al, yang penting paham.",
+        "kalo capek rehat ya al, jangan dipaksa.",
+        "aku tau kamu pasti bisa tembus PTN impian!",
+        "siap-siap ya al, maba jalur langit mau lewat :)"
+    ];
+
+    // Pilih kalimat secara random
+    const teksPilihan = sambutanAl[Math.floor(Math.random() * sambutanAl.length)];
+    textElement.innerText = teksPilihan;
+    
+      })
+      // Fungsi untuk menghilangkan preloader saat halaman siap
+      window.addEventListener("load", function () {
+        const preloader = document.getElementById("preloader");
+
+        // Beri jeda sedikit (misal 1 detik) supaya Alya sempat baca pesannya
+        setTimeout(() => {
+          preloader.style.opacity = "0";
+
+          // Setelah pudar, hapus elemen dari display agar tidak menghalangi klik
+          setTimeout(() => {
+            preloader.style.display = "none";
+          }, 800);
+        }, 1200);
+      });
     </script>
     <div
       id="custom-modal"
@@ -674,4 +711,100 @@
       </div>
     </div>
   </body>
+  <div
+    id="preloader"
+    style="
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease;
+    "
+  >
+    <div
+      id="preloader"
+      style="
+        position: fixed;
+        inset: 0;
+        background: #0f172a;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        transition: opacity 1s ease;
+      "
+    >
+      <div style="text-align: center">
+        <p
+          id="preload-text"
+          style="
+            font-size: 1rem;
+            color: #f8fafc;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-family: &quot;Comfortaa&quot;, cursive;
+            line-height: 1.6;
+          "
+        >
+          Makasih ya webnya udah di buka, 
+          <br>
+          SEMANGAT :)
+        </p>
+        <div
+          style="
+            width: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+          "
+        >
+          <div
+            style="
+              width: 25px;
+              height: 100%;
+              background: #f8fafc;
+              position: absolute;
+              left: -25px;
+              animation: loadAnim 2s infinite;
+            "
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @keyframes loadAnim {
+        0% {
+          left: -25px;
+        }
+        50% {
+          left: 50px;
+        }
+        100% {
+          left: -25px;
+        }
+      }
+    </style>
+  </div>
+
+  <style>
+    @keyframes loadAnim {
+      0% {
+        left: -20px;
+      }
+      50% {
+        left: 40px;
+      }
+      100% {
+        left: -20px;
+      }
+    }
+  </style>
 </html>
