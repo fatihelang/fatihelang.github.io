@@ -556,7 +556,6 @@
         "Fokus Al, soalnya nggak seberapa.",
         "Aku dukung kamu sampe lulus!",
         "Semangat Alya, calon maba hebat!",
-        "I love u Al wkwkwkwk",
       ];
 
       async function getKucing() {
@@ -614,35 +613,68 @@
           "Lelahmu hari ini adalah bekal senyummu pas pengumuman nanti. Semangat Alya!",
           "Jangan lupa sahur/buka yang bener ya Al, biar otak tetep encer.",
           "Soal UTBK itu cuma kertas, kamu pejuang. Kamu lebih kuat!",
-          "Istirahat 15 menit nggak akan bikin kamu gagal. Sayangi dirimu.",
+          "Istirahat 5 menit nggak akan bikin kamu gagal. Sayangi dirimu.",
           "Bayangkan namamu ada di daftar 'LULUS'. Kita rayakan bareng ya!",
+          "Kata Pak Sutris ada UFO di Jogja",
+          "Kamu lgi apa Al?",
+          "Kangen aku ga? ga ya...",
+          "Aku doain semoga lancar Al!",
+          "Take it slowly...",
+          "Santai, aku ga minta kamu menyukaiku balik kok",
+          "UTBK kek gimana sih Al?",
+          "Sini aja ke UMS wkwkw",
+          "Semangat bro!",
+          "Selain kucing, mau ku kasih gambar apa Al?",
+          "Baru baca buku apa nih Al?",
+          "Buku yang kemarin udah selesai dibaca kah Al?",
+          "Mau ku buatin lagu kek dulu lagi ga wkwk",
+          "Aku pen kenalan sama adik-adikmu deh",
+          "Kamu pas pakai hijab pashmina cantiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiik banget Al",
+          "Kamu suka mactha sama apa aja Al?",
+          "Maaf ya kalau PDKTku aneh",
+          "Al, aku ga tau berapa lama aku bisa disini bersamamu, tapi selagi aku masih bisa, aku akan selalu berkata kalau aku mencintaimu",
+          "Aku suka tawamu",
+          "Kenapa kita kek mirip sih?",
+          "ENJOY THE PROCESS",
+          "Jan lupa Allah yak",
+          "Bolpen zebra dari sasara ternyata, mahal bet 25k dong",
+          "Hei, kelas menulis Raditya Dika masih kamu akseskah?",
+          "Aku tau kamu kuat, tapi kalau kamu baru merasa lemah gapapa kok, aku ga akan maksa kamu jadi kuat terus",
+          "Alya... aku ga bisa bikin chain rajut uaa",
+          "Jujur, aku insecure deketin kamu, kamu keren banget soalnya, sedangkan aku kere",
+          "Kalau butuh apapun, bilang aja ya",
+          "Ga tau, ga mood ngasih tau wlee",
+          "Maaf ya kalau ga jelas",
+          "Kapan kapan liat sepatu/sandal lagi yuk seru ternyata wkwk",
+          "Hei............Tayo!",
+          "Tsuki ga kirei desu ne",
         ];
         document.getElementById("msg-res").innerText =
           `"${qs[Math.floor(Math.random() * qs.length)]}"`;
       }
 
-      (function() {
-    const textElement = document.getElementById('preload-text');
-    
-    // Daftar kalimat sambutan random dari Fatih buat Alya
-    const sambutanAl = [
-        "makasih udah buka webnya al :)",
-        "semangat terus ya belajarnya, al!",
-        "istirahat sebentar yuk, aku temenin disini :)",
-        "jangan lupa minum ya al, biar fokus!",
-        "hai al! siap buat sikat soal UTBK hari ini?",
-        "bangga banget liat kamu konsisten belajar, al.",
-        "pelan-pelan aja al, yang penting paham.",
-        "kalo capek rehat ya al, jangan dipaksa.",
-        "aku tau kamu pasti bisa tembus PTN impian!",
-        "siap-siap ya al, maba jalur langit mau lewat :)"
-    ];
+      (function () {
+        const textElement = document.getElementById("preload-text");
 
-    // Pilih kalimat secara random
-    const teksPilihan = sambutanAl[Math.floor(Math.random() * sambutanAl.length)];
-    textElement.innerText = teksPilihan;
-    
-      })
+        // Daftar kalimat sambutan random dari Fatih buat Alya
+        const sambutanAl = [
+          "makasih udah buka webnya al :)",
+          "semangat terus ya belajarnya, al!",
+          "istirahat sebentar yuk, aku temenin disini :)",
+          "jangan lupa minum ya al, biar fokus!",
+          "hai al! siap buat sikat soal UTBK hari ini?",
+          "bangga banget liat kamu konsisten belajar, al.",
+          "pelan-pelan aja al, yang penting paham.",
+          "kalo capek rehat ya al, jangan dipaksa.",
+          "aku tau kamu pasti bisa tembus PTN impian!",
+          "siap-siap ya al, maba jalur langit mau lewat :)",
+        ];
+
+        // Pilih kalimat secara random
+        const teksPilihan =
+          sambutanAl[Math.floor(Math.random() * sambutanAl.length)];
+        textElement.innerText = teksPilihan;
+      });
       // Fungsi untuk menghilangkan preloader saat halaman siap
       window.addEventListener("load", function () {
         const preloader = document.getElementById("preloader");
@@ -750,8 +782,8 @@
             line-height: 1.6;
           "
         >
-          Makasih ya webnya udah di buka, 
-          <br>
+          Makasih ya webnya udah di buka,
+          <br />
           SEMANGAT :)
         </p>
         <div
