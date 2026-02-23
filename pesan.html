@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan untuk Alya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --accent: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Comfortaa', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Latar belakang bintang-bintang halus */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 2rem;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        #typewriter {
+            font-size: 1rem;
+            white-space: pre-line;
+            opacity: 0.9;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2rem;
+            background: var(--text);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .fade-in-btn {
+            margin-top: 3rem;
+            opacity: 0;
+            transition: opacity 2s ease;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Ornamen bunga atau simbol kecil di bawah */
+        .ornament {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <div class="ornament">--Untuk sunn.floe--</div>
+        <div id="typewriter"></div><span class="cursor" id="cursor"></span>
+
+        <div class="fade-in-btn" id="btn-container">
+            <a href="Untukmu.html" class="back-btn">Kembali ke Sanctuary</a>
+        </div>
+    </div>
+
+    <script>
+        const text = `Halo Al, to the point aja ya. Memang benar aku suka sama kamu. Aku nggak minta kamu buat suka balik, setidaknya tidak sekarang, karena aku paham fokus kamu lagi di mana.
+
+Buatku, yang terpenting saat ini adalah kamu bisa capai tujuanmu dulu. Nanti pas kamu kuliah di 2026, kamu bakal ketemu lingkungan baru, orang-orang baru, dan nggak menutup kemungkinan kamu bakal nemu seseorang yang menarik buatmu. Itu nggak apa-apa.
+
+Aku nggak peduli ending-nya gimana, fakta bahwa aku pernah sedekat ini sama kamu aja udah bikin aku senang. Mungkin ke depannya aku bakal sedikit ngerem buat nggak terlalu sering gangguin kamu. Bukan karena malas atau nggak suka lagi, tapi aku cuma mau menjaga diriku sendiri dan menjaga kenyamananmu juga.
+
+Selagi aku punya kesempatan bisa di dekatmu, aku akan menikmati kesempatan yang ada. Honestly, I want you. But in the end, I just want you to find the happiness that you’re truly proud of.
+
+사랑해요
+
+Fatih` ;
+
+        let i = 0;
+        const speed = 50; // Kecepatan ketik (ms)
+        const typewriterEl = document.getElementById("typewriter");
+        const btnContainer = document.getElementById("btn-container");
+        const cursor = document.getElementById("cursor");
+
+        function typeWriter() {
+            if (i < text.length) {
+                typewriterEl.textContent += text.charAt(i);
+                i++;
+                // Scroll otomatis ke bawah jika pesan panjang
+                window.scrollTo(0, document.body.scrollHeight);
+                setTimeout(typeWriter, speed);
+            } else {
+                // Selesai mengetik
+                cursor.style.display = "none";
+                btnContainer.style.opacity = "1";
+            }
+        }
+
+        // Mulai animasi setelah jeda singkat
+        setTimeout(typeWriter, 1500);
+    </script>
+</body>
+</html>
