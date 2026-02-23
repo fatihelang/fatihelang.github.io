@@ -323,42 +323,35 @@
       <button class="gen-btn" onclick="getMsg()">Pesan Buat Alya ✨</button>
     </section>
 
-    <div class="flip-card" onclick="this.classList.toggle('flipped')">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          <p style="font-size: 0.9rem; line-height: 1.5">
-            Klik untuk gombalan receh dari Fatih <br>
-            (tiap minggu berubah)
-          </p>
-        </div>
-        <div class="flip-card-back">
-          <img src="assets/hehe.png" alt="Momen Spesial" />
-        </div>
-      </div>
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <p style="font-size: 0.9rem; line-height: 1.6">
+        Buka ini jika sudah memantapkan hati...<br>
+        <span style="font-size: 0.7rem; opacity: 0.7;">wkwkwk</span>
+      </p>
     </div>
-
-    <div
-      class="hidden-moon"
-      onclick="
-        showModal(
-          'Pesan dari Fatih ',
-          'Al, aku ga tau berapa lama kesempatanku untuk bisa deket sama kamu, jadi selagi aku masih bisa, aku mau bilang i love u',
-          'message',
-        )
-      "
-      style="
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        opacity: 0.3;
-        cursor: pointer;
-        font-size: 0.7rem;
-        color: var(--text-secondary);
-      "
-    >
-      Click here
+    
+    <div class="flip-card-back" style="flex-direction: column; gap: 15px;">
+      <p style="font-size: 0.8rem; color: var(--text-secondary);">Sudah yakin?</p>
+      <button onclick="window.location.href='pesan.html'" 
+              style="
+                background: white; 
+                color: #0f172a; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 50px; 
+                font-family: inherit; 
+                font-weight: 700; 
+                font-size: 0.8rem; 
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+              ">
+        Selamat membaca ✨
+      </button>
     </div>
-
+  </div>
+</div>
     <script>
       // --- DATA 10 KALIMAT PER EMOSI ---
       const moodData = {
