@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Aplikom - Belajar Rumus Excel</title>
+    <style>
+        :root {
+            --primary-color: #107c41; /* Warna Khas Excel */
+            --secondary-color: #f3f2f1;
+            --text-color: #333;
+            --accent-color: #21a366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            background-color: white;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* Content Area */
+        main {
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            margin-top: 15px;
+            color: #444;
+        }
+
+        p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* Code/Formula styling */
+        .formula-box {
+            background-color: #f4fbf7;
+            border-left: 5px solid var(--accent-color);
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 0;
+            color: #1b5e20;
+        }
+
+        /* Excel-like Table Styling */
+        .excel-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .excel-table th, .excel-table td {
+            border: 1px solid #bbb;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .excel-table th {
+            background-color: #e6e6e6;
+            font-weight: bold;
+        }
+
+        .excel-table td:first-child {
+            background-color: #e6e6e6;
+            font-weight: bold;
+            width: 40px;
+        }
+
+        .note {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Quiz Styling */
+        .quiz-section {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+        }
+
+        .quiz-option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quiz-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .btn-check {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-check:hover {
+            background-color: var(--accent-color);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ringkasan Rumus Excel</h1>
+        <p>Materi singkat untuk persiapan UAS Aplikasi Komputer</p>
+    </header>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="openTab(event, 'sederhana')">Rumus Dasar</button>
+        <button class="tab-btn" onclick="openTab(event, 'logika')">IF & Fungsi Teks</button>
+        <button class="tab-btn" onclick="openTab(event, 'lookup')">VLOOKUP & HLOOKUP</button>
+    </div>
+
+    <main>
+        <div id="sederhana" class="tab-content active">
+            <div class="card">
+                <h2>1. Rumus Dasar</h2>
+                <p>Beberapa rumus berikut sering digunakan untuk mengolah data angka di Microsoft Excel.</p>
+
+                <table class="excel-table">
+                    <tr><th></th><th>A</th><th>B</th></tr>
+                    <tr><td>1</td><td><b>Nilai Tugas</b></td><td>80</td></tr>
+                    <tr><td>2</td><td><b>Nilai UTS</b></td><td>75</td></tr>
+                    <tr><td>3</td><td><b>Nilai UAS</b></td><td>90</td></tr>
+                </table>
+
+                <h3>A. SUM</h3>
+                <p>Digunakan untuk menjumlahkan seluruh nilai dalam suatu range.</p>
+                <div class="formula-box">=SUM(B1:B3)</div>
+                <p><i>Hasil: 245</i></p>
+
+                <h3>B. AVERAGE</h3>
+                <p>Digunakan untuk menghitung nilai rata-rata.</p>
+                <div class="formula-box">=AVERAGE(B1:B3)</div>
+                <p><i>Hasil: 81,67</i></p>
+
+                <h3>C. MAX</h3>
+                <p>Digunakan untuk mencari nilai terbesar.</p>
+                <div class="formula-box">=MAX(B1:B3)</div>
+                <p><i>Hasil: 90</i></p>
+
+                <h3>D. MIN</h3>
+                <p>Digunakan untuk mencari nilai terkecil.</p>
+                <div class="formula-box">=MIN(B1:B3)</div>
+                <p><i>Hasil: 75</i></p>
+            </div>
+        </div>
+
+        <div id="logika" class="tab-content">
+            <div class="card">
+                <h2>2. Fungsi IF</h2>
+                <p>Rumus IF digunakan untuk menentukan hasil berdasarkan kondisi tertentu.</p>
+
+                <div class="formula-box">
+                    =IF(Kondisi, "Jika Benar", "Jika Salah")
+                </div>
+
+                <p><b>Contoh:</b> Jika nilai pada sel B2 lebih dari atau sama dengan 75, maka hasilnya "LULUS". Jika kurang dari 75, maka hasilnya "REMEDIAL".</p>
+
+                <div class="formula-box">
+                    =IF(B2>=75,"LULUS","REMEDIAL")
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>3. IF dengan LEFT, MID, dan RIGHT</h2>
+                <p>Ketiga fungsi ini digunakan untuk mengambil sebagian karakter dari sebuah teks dan sering dipadukan dengan IF.</p>
+
+                <table class="excel-table">
+                    <tr><th></th><th>A (Kode)</th><th>B (Keterangan)</th></tr>
+                    <tr><td>1</td><td>MKS-01-M</td><td>...</td></tr>
+                </table>
+
+                <h3>A. LEFT</h3>
+
+                <p>LEFT digunakan untuk mengambil karakter dari bagian kiri teks.</p>
+
+                <p><b>Contoh:</b> Jika tiga karakter pertama adalah "MKS", maka hasilnya "MAKASSAR".</p>
+
+                <div class="formula-box">
+                    =IF(LEFT(A1,3)="MKS","MAKASSAR","LUAR KOTA")
+                </div>
+
+                <h3>B. MID</h3>
+
+                <p>MID digunakan untuk mengambil karakter dari posisi tertentu di dalam teks.</p>
+
+                <p>Format penulisan:</p>
+
+                <div class="formula-box">
+                    MID(Teks, Posisi_Awal, Jumlah_Karakter)
+                </div>
+
+                <p>Pada contoh kode <b>MKS-01-M</b>, angka "01" berada pada karakter ke-5 dan terdiri dari dua karakter.</p>
+
+                <div class="formula-box">
+                    =IF(MID(A1,5,2)="01","Angkatan 1","Angkatan 2")
+                </div>
+
+                <h3>C. RIGHT</h3>
+
+                <p>RIGHT digunakan untuk mengambil karakter dari bagian kanan teks.</p>
+
+                <p>Jika karakter terakhir adalah "M", maka hasilnya "Male". Selain itu hasilnya "Female".</p>
+
+                <div class="formula-box">
+                    =IF(RIGHT(A1,1)="M","Male","Female")
+                </div>
+
+            </div>
+        </div>
+
+        <div id="lookup" class="tab-content">
+            <div class="card">
+
+                <h2>4. VLOOKUP dan HLOOKUP</h2>
+
+                <p>Kedua fungsi ini digunakan untuk mengambil data dari tabel referensi berdasarkan nilai tertentu.</p>
+
+                <div class="note">
+                    <strong>Perbedaan:</strong>
+                    <ul>
+                        <li><b>VLOOKUP</b> digunakan jika tabel referensi tersusun secara vertikal.</li>
+                        <li><b>HLOOKUP</b> digunakan jika tabel referensi tersusun secara horizontal.</li>
+                    </ul>
+                </div>
+
+                <h3>A. VLOOKUP</h3>
+
+                <p>Format penulisan:</p>
+
+                <div class="formula-box">
+                    =VLOOKUP(Sel_Kode,Tabel_Referensi,Nomor_Kolom,FALSE)
+                </div>
+
+                <p>Contoh:</p>
+
+                <div class="formula-box">
+                    =VLOOKUP(A2,$D$2:$E$5,2,FALSE)
+                </div>
+
+                <p class="note">
+                    Gunakan tombol <b>F4</b> agar referensi tabel menjadi absolut sehingga tidak berubah ketika rumus disalin.
+                </p>
+
+                <h3>B. HLOOKUP</h3>
+
+                <p>Format penulisan:</p>
+
+                <div class="formula-box">
+                    =HLOOKUP(Sel_Kode,Tabel_Referensi,Nomor_Baris,FALSE)
+                </div>
+
+                <p>Contoh:</p>
+
+                <div class="formula-box">
+                    =HLOOKUP(A2,$D$10:$G$12,3,FALSE)
+                </div>
+
+            </div>
+        </div>
+
+        
+
+    </main>
+
+    <footer>
+        <p>Disusun sebagai ringkasan materi Excel untuk membantu belajar UAS Aplikasi Komputer.</p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function checkAnswer() {
+            var options = document.getElementsByName("q1");
+            var feedback = document.getElementById("quiz-feedback");
+            var selectedValue = "";
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].checked) {
+                    selectedValue = options[i].value;
+                    break;
+                }
+            }
+
+            if (selectedValue === "") {
+                feedback.innerHTML = "Silakan pilih salah satu jawaban terlebih dahulu.";
+                feedback.style.color = "orange";
+            } else if (selectedValue === "correct") {
+                feedback.innerHTML = "Jawaban benar. Fungsi LEFT mengambil karakter dari sisi kiri, sehingga hasilnya adalah MANA.";
+                feedback.style.color = "green";
+            } else {
+                feedback.innerHTML = "Jawaban belum tepat. Coba perhatikan kembali cara kerja fungsi LEFT.";
+                feedback.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>
