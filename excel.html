@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKS Aplikom - Belajar Rumus Excel</title>
+    <title>Rumus Excel</title>
     <style>
         :root {
             --primary-color: #107c41; /* Warna Khas Excel */
@@ -261,7 +261,12 @@
                 <p>Digunakan untuk mencari nilai terkecil.</p>
                 <div class="formula-box">=MIN(B1:B3)</div>
                 <p><i>Hasil: 75</i></p>
+
+               
+               
             </div>
+
+             <div class="formula-box">Kalau pakai "," ga bisa, brarti pakai ";"</div>
         </div>
 
         <div id="logika" class="tab-content">
@@ -325,7 +330,10 @@
                     =IF(RIGHT(A1,1)="M","Male","Female")
                 </div>
 
+               
             </div>
+             <div class="formula-box">Kalau pakai "," ga bisa, brarti pakai ";"</div>
+
         </div>
 
         <div id="lookup" class="tab-content">
@@ -375,7 +383,10 @@
                     =HLOOKUP(A2,$D$10:$G$12,3,FALSE)
                 </div>
 
+               
             </div>
+             <div class="formula-box">Kalau pakai "," ga bisa, brarti pakai ";"</div>
+
         </div>
 
         
@@ -383,7 +394,7 @@
     </main>
 
     <footer>
-        <p>Disusun sebagai ringkasan materi Excel untuk membantu belajar UAS Aplikasi Komputer.</p>
+        <p>-patih</p>
     </footer>
 
     <script>
@@ -404,29 +415,7 @@
             evt.currentTarget.classList.add("active");
         }
 
-        function checkAnswer() {
-            var options = document.getElementsByName("q1");
-            var feedback = document.getElementById("quiz-feedback");
-            var selectedValue = "";
-
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].checked) {
-                    selectedValue = options[i].value;
-                    break;
-                }
-            }
-
-            if (selectedValue === "") {
-                feedback.innerHTML = "Silakan pilih salah satu jawaban terlebih dahulu.";
-                feedback.style.color = "orange";
-            } else if (selectedValue === "correct") {
-                feedback.innerHTML = "Jawaban benar. Fungsi LEFT mengambil karakter dari sisi kiri, sehingga hasilnya adalah MANA.";
-                feedback.style.color = "green";
-            } else {
-                feedback.innerHTML = "Jawaban belum tepat. Coba perhatikan kembali cara kerja fungsi LEFT.";
-                feedback.style.color = "red";
-            }
-        }
+     
     </script>
 
 </body>
